@@ -2,6 +2,7 @@
     <div class="sidebar">
         <el-menu
             class="sidebar-el-menu"
+            default-active="activeMenu"
             @select="handleSelect"
             :collapse="collapse"
             background-color="#324157"
@@ -59,6 +60,7 @@
 export default {
     data() {
         return {
+            activeMenu: this.$store.state.selectMenu,
             items: [
                 {
                     icon: "el-icon-lx-home",
@@ -117,9 +119,6 @@ export default {
         };
     },
     computed: {
-        onRoutes() {
-            return this.$route.path.replace("/", "");
-        },
         collapse(){
             return this.$store.state.collapse
         }
@@ -128,6 +127,7 @@ export default {
         handleSelect(index, indexPath) {
             console.log(index, indexPath);
             let path = indexPath.join('')
+            this.$store.commit("setSelectMenu", path);
             this.$router.push({ path: path })
         }
     }

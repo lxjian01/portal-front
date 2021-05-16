@@ -2,19 +2,19 @@ import {createStore} from 'vuex'
 
 export default createStore({
     state: {
+        selectMenu: "/dashboard",//默认选中页面index
         tagsList: [],
         collapse: false
     },
     mutations: {
+        setSelectMenu(state, data){
+          state.selectMenu = data
+        },
         delTagsItem(state, data) {
-            state
-                .tagsList
-                .splice(data.index, 1);
+            state.tagsList.splice(data.index, 1);
         },
         setTagsItem(state, data) {
-            state
-                .tagsList
-                .push(data)
+            state.tagsList.push(data)
         },
         clearTags(state) {
             state.tagsList = []
@@ -27,21 +27,13 @@ export default createStore({
                 const item = state.tagsList[i];
                 if (item.path === data.$route.fullPath) {
                     if (i < len - 1) {
-                        data
-                            .$router
-                            .push(state.tagsList[i + 1].path);
+                        data.$router.push(state.tagsList[i + 1].path);
                     } else if (i > 0) {
-                        data
-                            .$router
-                            .push(state.tagsList[i - 1].path);
+                        data.$router.push(state.tagsList[i - 1].path);
                     } else {
-                        data
-                            .$router
-                            .push("/");
+                        data.$router.push("/");
                     }
-                    state
-                        .tagsList
-                        .splice(i, 1);
+                    state.tagsList.splice(i, 1);
                     break;
                 }
             }

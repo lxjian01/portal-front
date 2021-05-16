@@ -2,9 +2,12 @@
     <div class="sidebar">
         <el-menu
             class="sidebar-el-menu"
-            default-active="activeMenu"
-            @select="handleSelect"
+            :default-active="activeMenu"
+            :default-openeds="openedMenus"
             :collapse="collapse"
+            @select="handleSelect"
+            @open="handleOpen"
+            @close="handleClose"
             background-color="#324157"
             text-color="#bfcbd9"
             active-text-color="#20a0ff"
@@ -60,7 +63,6 @@
 export default {
     data() {
         return {
-            activeMenu: this.$store.state.selectMenu,
             items: [
                 {
                     icon: "el-icon-lx-home",
@@ -119,16 +121,30 @@ export default {
         };
     },
     computed: {
+        activeMenu(){
+            let activeMenu = this.$store.getters.activeMenu
+            let path = activeMenu.join('')
+            return path
+        },
+        openedMenus(){
+            let openedMenus = this.$store.getters.activeMenu[0]
+            return [openedMenus]
+        },
         collapse(){
             return this.$store.state.collapse
         }
     },
     methods: {
         handleSelect(index, indexPath) {
-            console.log(index, indexPath);
+            this.$store.commit("setActiveMenu", indexPath);
             let path = indexPath.join('')
-            this.$store.commit("setSelectMenu", path);
             this.$router.push({ path: path })
+        },
+        handleOpen(key, keyPath) {
+            console.log(key, keyPath);
+        },
+        handleClose(key, keyPath) {
+            console.log(key, keyPath);
         }
     }
 };

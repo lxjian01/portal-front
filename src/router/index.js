@@ -5,25 +5,23 @@ import error from "./modules/error";
 
 const routes = [
     {
-        path: '/',
-        redirect: '/dashboard'
-    }, {
         path: "/login",
-        name: "login",
+        name: "/login",
         meta: {
             title: '登录'
         },
         component: () => import ("../views/Login.vue")
     }, {
         path: "/",
-        name: "index",
+        name: "/",
+        redirect: '/dashboard',
         component: Index,
         children: [
             ...demo,
             ...error,
             {
                 path: "/dashboard",
-                name: "dashboard",
+                name: "/dashboard",
                 meta: {
                     title: '系统首页'
                 },

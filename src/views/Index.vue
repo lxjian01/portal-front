@@ -19,9 +19,6 @@ export default {
         vSidebar,
     },
     computed: {
-        tagsList() {
-            return this.$store.state.tagsList.map(item => item.name);
-        },
         collapse() {
             return this.$store.state.collapse;
         }

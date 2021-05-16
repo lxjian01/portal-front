@@ -72,7 +72,7 @@ export default {
         },
         // 侧边栏折叠
         collapseChange() {
-            this.$store.commit("handleCollapse", !this.collapse);
+            this.$store.commit("setCollapse", !this.collapse);
         }
     },
     mounted() {

@@ -2,17 +2,19 @@
     <div class="sidebar">
         <el-menu
             class="sidebar-el-menu"
-            :default-active="onRoutes"
+            @select="handleSelect"
             :collapse="collapse"
             background-color="#324157"
             text-color="#bfcbd9"
             active-text-color="#20a0ff"
             unique-opened
-            router
         >
             <template v-for="item in items">
                 <template v-if="item.subs">
-                    <el-submenu :index="item.index" :key="item.index">
+                    <el-submenu
+                            :index="item.index"
+                            :path="item.path"
+                            :key="item.index">
                         <template #title>
                             <i :class="item.icon"></i>
                             <span>{{ item.title }}</span>
@@ -21,6 +23,7 @@
                             <el-submenu
                                 v-if="subItem.subs"
                                 :index="subItem.index"
+                                :path="subItem.path"
                                 :key="subItem.index"
                             >
                                 <template #title>{{ subItem.title }}</template>
@@ -28,6 +31,7 @@
                             <el-menu-item
                                 v-else
                                 :index="subItem.index"
+                                :path="subItem.path"
                                 :key="subItem.index"
                             >
                                 {{ subItem.title }}
@@ -36,7 +40,11 @@
                     </el-submenu>
                 </template>
                 <template v-else>
-                    <el-menu-item :index="item.index" :key="item.index">
+                    <el-menu-item
+                            :index="item.index"
+                            :path="item.path"
+                            :key="item.index"
+                    >
                         <i :class="item.icon"></i>
                         <template #title>{{ item.title }}</template>
                     </el-menu-item>
@@ -54,44 +62,53 @@ export default {
             items: [
                 {
                     icon: "el-icon-lx-home",
-                    index: "dashboard",
+                    index: "/dashboard",
+                    path: "/dashboard",
                     title: "系统首页"
                 },
                 {
                     icon: "el-icon-lx-calendar",
-                    index: "3",
+                    index: "/demo",
+                    path: "/demo",
                     title: "表单相关",
                     subs: [
                         {
-                            index: "form",
+                            index: "/form",
+                            path: "/form",
                             title: "基本表单"
                         },
                         {
-                            index: "upload",
+                            index: "/upload",
+                            path: "/upload",
                             title: "文件上传"
                         },
                         {
                             icon: "el-icon-lx-cascades",
-                            index: "table",
+                            index: "/table",
+                            path: "/table",
                             title: "基础表格"
                         },
                     ]
                 },
                 {
                     icon: "el-icon-lx-warn",
-                    index: "7",
+                    index: "/error",
+                    path: "/error",
                     title: "错误处理",
                     subs: [
                         {
-                            index: "permission",
+                            index: "/permission",
+                            path: "/permission",
                             title: "权限测试"
                         },
                         {
-                            index: "403",
+                            index: "/403",
+                            path: "/403",
                             title: "403页面"
                         },
                         {
-                            index: "404",
+                            index: "/404",
+                            path: "/404",
                             title: "404页面"
                         },
                     ]
@@ -105,6 +122,13 @@ export default {
         },
         collapse(){
             return this.$store.state.collapse
+        }
+    },
+    methods: {
+        handleSelect(index, indexPath) {
+            console.log(index, indexPath);
+            let path = indexPath.join('')
+            this.$router.push({ path: path })
         }
     }
 };

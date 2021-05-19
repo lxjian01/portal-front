@@ -12,6 +12,7 @@
 <script>
 import vHeader from "../components/Header";
 import vSidebar from "../components/Sidebar";
+import "../utils/menu";
 
 export default {
     components: {
@@ -21,6 +22,11 @@ export default {
     computed: {
         collapse() {
             return this.$store.state.collapse;
+        }
+    },
+    methods: {
+        init() {
+
         }
     }
 };

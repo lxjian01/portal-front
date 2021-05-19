@@ -1,3 +1,4 @@
+import defaultSettings from '../settings'
 import {createRouter, createWebHistory} from "vue-router";
 import Index from "../views/Index.vue";
 import demo from "./modules/demo";
@@ -37,7 +38,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    document.title = `${to.meta.title} | portal`;
+    document.title = `${to.meta.title} | ${defaultSettings.title}`;
     const role = localStorage.getItem('ms_username');
     if (!role && to.path !== '/login') {
         next('/login');

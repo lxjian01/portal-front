@@ -60,6 +60,9 @@
 
 <script>
 // import bus from "../common/bus";
+import { getMenuList } from "../api/sysmgr";
+
+
 export default {
     data() {
         return {
@@ -134,7 +137,16 @@ export default {
             return this.$store.state.collapse
         }
     },
+    created() {
+        this.init()
+    },
     methods: {
+        init(){
+            getMenuList().then(res => {
+                console.log(res);
+
+            });
+        },
         handleSelect(index, indexPath) {
             this.$store.commit("setActiveMenu", indexPath);
             let path = indexPath.join('')

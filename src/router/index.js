@@ -1,7 +1,7 @@
 import defaultSettings from '../settings'
 import {createRouter, createWebHistory} from "vue-router";
 import Index from "../views/Index.vue";
-import demo from "./modules/demo";
+import sysmgr from "./modules/sysmgr";
 import error from "./modules/error";
 
 const routes = [
@@ -18,7 +18,7 @@ const routes = [
         redirect: '/dashboard',
         component: Index,
         children: [
-            ...demo,
+            ...sysmgr,
             ...error,
             {
                 path: "/dashboard",

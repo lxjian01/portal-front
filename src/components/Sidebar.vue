@@ -13,30 +13,30 @@
             active-text-color="#20a0ff"
             unique-opened
         >
-            <template v-for="item in items">
-                <template v-if="item.subs">
+            <template v-for="item in menuList">
+                <template v-if="item.children">
                     <el-submenu
-                            :index="item.index"
+                            :index="item.path"
                             :path="item.path"
-                            :key="item.index">
+                            :key="item.path">
                         <template #title>
                             <i :class="item.icon"></i>
                             <span>{{ item.title }}</span>
                         </template>
-                        <template v-for="subItem in item.subs">
+                        <template v-for="subItem in item.children">
                             <el-submenu
-                                v-if="subItem.subs"
-                                :index="subItem.index"
+                                v-if="subItem.children"
+                                :index="subItem.path"
                                 :path="subItem.path"
-                                :key="subItem.index"
+                                :key="subItem.path"
                             >
                                 <template #title>{{ subItem.title }}</template>
                             </el-submenu>
                             <el-menu-item
                                 v-else
-                                :index="subItem.index"
+                                :index="subItem.path"
                                 :path="subItem.path"
-                                :key="subItem.index"
+                                :key="subItem.path"
                             >
                                 {{ subItem.title }}
                             </el-menu-item>
@@ -45,9 +45,9 @@
                 </template>
                 <template v-else>
                     <el-menu-item
-                            :index="item.index"
+                            :index="item.path"
                             :path="item.path"
-                            :key="item.index"
+                            :key="item.path"
                     >
                         <i :class="item.icon"></i>
                         <template #title>{{ item.title }}</template>
@@ -61,66 +61,12 @@
 <script>
 // import bus from "../common/bus";
 import { getMenuList } from "../api/sysmgr";
-
+import { getTree } from "../utils/menu";
 
 export default {
     data() {
         return {
-            items: [
-                {
-                    icon: "el-icon-lx-home",
-                    index: "/dashboard",
-                    path: "/dashboard",
-                    title: "系统首页"
-                },
-                {
-                    icon: "el-icon-lx-calendar",
-                    index: "/demo",
-                    path: "/demo",
-                    title: "表单相关",
-                    subs: [
-                        {
-                            index: "/form",
-                            path: "/form",
-                            title: "基本表单"
-                        },
-                        {
-                            index: "/upload",
-                            path: "/upload",
-                            title: "文件上传"
-                        },
-                        {
-                            icon: "el-icon-lx-cascades",
-                            index: "/table",
-                            path: "/table",
-                            title: "基础表格"
-                        },
-                    ]
-                },
-                {
-                    icon: "el-icon-lx-warn",
-                    index: "/error",
-                    path: "/error",
-                    title: "错误处理",
-                    subs: [
-                        {
-                            index: "/permission",
-                            path: "/permission",
-                            title: "权限测试"
-                        },
-                        {
-                            index: "/403",
-                            path: "/403",
-                            title: "403页面"
-                        },
-                        {
-                            index: "/404",
-                            path: "/404",
-                            title: "404页面"
-                        },
-                    ]
-                }
-            ]
+            menuList: []
         };
     },
     computed: {
@@ -142,9 +88,8 @@ export default {
     },
     methods: {
         init(){
-            getMenuList().then(res => {
-                console.log(res);
-
+            getMenuList().then(data => {
+                this.menuList = getTree(data,0,null,null)
             });
         },
         handleSelect(index, indexPath) {

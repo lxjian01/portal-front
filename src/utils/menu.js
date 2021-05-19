@@ -3,10 +3,9 @@
 export function getTree(data,rootPid,id,pid){
     let treeData = [];
     data.forEach((item) => {
-        if(item[pid] === rootPid){
-            let myNode=getMyNode(item);
-            getSubNode(id,pid,myNode,data);
-            treeData.push(myNode);
+        if(item.pid === rootPid){
+            getSubNode(id,pid,item,data);
+            treeData.push(item);
         }
     });
     return treeData;
@@ -15,21 +14,18 @@ export function getTree(data,rootPid,id,pid){
 //解析基础数据返回树结构数据
 function getSubNode(id,pid,myNode,data) {
     data.forEach((item) => {
-        if(item[pid]===myNode[id]){
-            let mySubNode=getMyNode(item);
-            myNode.children.push(mySubNode)
+        if(item.pid === myNode.id){
+            if(!myNode.children){
+                myNode.children = []
+            }
+            myNode.children.push(item)
         }
     });
-    if(myNode.children.length!==0){
+    if(myNode.children){
         myNode.children.forEach((subItem) => {
             getSubNode(id,pid,subItem,data);
         });
     }
-}
-
-function getMyNode(item) {
-    item["children"]=[];
-    return item;
 }
 
 

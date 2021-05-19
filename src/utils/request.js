@@ -6,7 +6,7 @@ export const TOKEN_KEY = 'Token ' // 空格必须
 
 let requestList = [];
 const saveTime = 1000;
-console.info(process.env)
+
 // create an axios instance
 const service = axios.create({
     baseURL: '/',

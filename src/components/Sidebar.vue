@@ -84,16 +84,15 @@ export default {
         }
     },
     created() {
-        this.init()
+        this.queryMenuList()
     },
     methods: {
-        init(){
+        queryMenuList(){
             getMenuList().then(data => {
                 this.menuList = getTree(data,0,null,null)
             });
         },
         handleSelect(index, indexPath) {
-            console.info(this.$router)
             this.$store.commit("setActiveMenu", indexPath);
             let path = indexPath.join('')
             this.$router.push({ path: path })

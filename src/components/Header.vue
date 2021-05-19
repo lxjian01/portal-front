@@ -15,7 +15,7 @@
                         :content="message?`有${message}条未读消息`:`消息中心`"
                         placement="bottom"
                     >
-                        <router-link to="/sysmgr/form">
+                        <router-link to="/dashboard">
                             <i class="el-icon-bell"></i>
                         </router-link>
                     </el-tooltip>

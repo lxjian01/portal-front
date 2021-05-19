@@ -1,79 +1,69 @@
 <template>
-    <div>
-        <div class="crumbs">
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item>
-                    <i class="el-icon-lx-calendar"></i> 表单
-                </el-breadcrumb-item>
-                <el-breadcrumb-item>图片上传</el-breadcrumb-item>
-            </el-breadcrumb>
-        </div>
-        <div class="container">
-            <div class="content-title">支持拖拽</div>
-            <div class="plugins-tips">
-                Element UI自带上传组件。
-                访问地址：
-                <a
+    <div class="container">
+        <div class="content-title">支持拖拽</div>
+        <div class="plugins-tips">
+            Element UI自带上传组件。
+            访问地址：
+            <a
                     href="http://element.eleme.io/#/zh-CN/component/upload"
                     target="_blank"
-                >Element UI Upload</a>
-            </div>
-            <el-upload
+            >Element UI Upload</a>
+        </div>
+        <el-upload
                 class="upload-demo"
                 drag
                 action="http://jsonplaceholder.typicode.com/api/posts/"
                 multiple
-            >
-                <i class="el-icon-upload"></i>
-                <div class="el-upload__text">
-                    将文件拖到此处，或
-                    <em>点击上传</em>
-                </div>
-                <template #tip>
-                    <div class="el-upload__tip">只能上传 jpg/png 文件，且不超过 500kb</div>
-                </template>
-            </el-upload>
+        >
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">
+                将文件拖到此处，或
+                <em>点击上传</em>
+            </div>
+            <template #tip>
+                <div class="el-upload__tip">只能上传 jpg/png 文件，且不超过 500kb</div>
+            </template>
+        </el-upload>
 
-            <div class="content-title">支持裁剪</div>
-            <div class="plugins-tips">
-                vue-cropperjs：一个封装了 cropperjs 的 Vue 组件。
-                访问地址：
-                <a
+        <div class="content-title">支持裁剪</div>
+        <div class="plugins-tips">
+            vue-cropperjs：一个封装了 cropperjs 的 Vue 组件。
+            访问地址：
+            <a
                     href="https://github.com/Agontuk/vue-cropperjs"
                     target="_blank"
-                >vue-cropperjs</a>
-            </div>
-            <div class="crop-demo">
-                <img :src="cropImg" class="pre-img" />
-                <div class="crop-demo-btn">
-                    选择图片
-                    <input
+            >vue-cropperjs</a>
+        </div>
+        <div class="crop-demo">
+            <img :src="cropImg" class="pre-img" />
+            <div class="crop-demo-btn">
+                选择图片
+                <input
                         class="crop-input"
                         type="file"
                         name="image"
                         accept="image/*"
                         @change="setImage"
-                    />
-                </div>
+                />
             </div>
+        </div>
 
-            <el-dialog title="裁剪图片" v-model="dialogVisible" width="600px">
-                <vue-cropper
+        <el-dialog title="裁剪图片" v-model="dialogVisible" width="600px">
+            <vue-cropper
                     ref="cropper"
                     :src="imgSrc"
                     :ready="cropImage"
                     :zoom="cropImage"
                     :cropmove="cropImage"
                     style="width:100%;height:300px;"
-                ></vue-cropper>
-                <template #footer>
+            ></vue-cropper>
+            <template #footer>
                     <span class="dialog-footer">
                         <el-button @click="cancelCrop">取 消</el-button>
                         <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
                     </span>
-                </template>
-            </el-dialog>
-        </div>
+            </template>
+        </el-dialog>
     </div>
 </template>
 

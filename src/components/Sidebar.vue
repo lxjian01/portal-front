@@ -93,6 +93,7 @@ export default {
             });
         },
         handleSelect(index, indexPath) {
+            console.info(this.$router)
             this.$store.commit("setActiveMenu", indexPath);
             let path = indexPath.join('')
             this.$router.push({ path: path })
@@ -112,7 +113,7 @@ export default {
     display: block;
     position: absolute;
     left: 0;
-    top: 70px;
+    top: 50px;
     bottom: 0;
     overflow-y: scroll;
 }

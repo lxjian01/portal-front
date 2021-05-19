@@ -2,22 +2,25 @@
 export default [
     {
         path: "/sysmgr/table",
-        name: "/demo/table",
+        name: "/sysmgr/table",
         meta: {
+            parentTitle: '系统管理',
             title: '表格'
         },
         component: () => import ("../../views/sysmgr/BaseTable.vue")
     }, {
-        path: "/sysmgr/form",
-        name: "/demo/form",
+        path: "/sysmgr/menu",
+        name: "/sysmgr/menu",
         meta: {
+            parentTitle: '系统管理',
             title: '表单'
         },
-        component: () => import ("../../views/sysmgr/BaseForm.vue")
+        component: () => import ("../../views/sysmgr/Menu.vue")
     }, {
         path: "/sysmgr/upload",
-        name: "/demo/upload",
+        name: "/sysmgr/upload",
         meta: {
+            parentTitle: '系统管理',
             title: '上传插件'
         },
         component: () => import ("../../views/sysmgr/Upload.vue")

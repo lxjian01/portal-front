@@ -1,17 +1,21 @@
-import request from '../utils/request';
+import { GET, POST } from "./_methods"
 
-export const getMenuList = query => {
-    return request({
-        url: '/api/portal/sysmgr/menu/list',
-        method: 'get',
-        params: query
-    });
-};
+export function getMenuList(params){
+    return GET(`/api/portal/sysmgr/menu/list`, params)
+}
 
-export const getMenuPage = query => {
-    return request({
-        url: '/api/portal/sysmgr/menu/page',
-        method: 'get',
-        params: query
-    });
-};
+export function getParentMenuList(params){
+    return GET(`/api/portal/sysmgr/menu/parent_list`, params)
+}
+
+export function getMenuPage(params){
+    return GET(`api/portal/sysmgr/menu/page`, params)
+}
+
+export function addMenu(params){
+    return POST(`/api/portal/sysmgr/menu`, params)
+}
+
+export function editMenu(id, params){
+    return POST(`/api/portal/sysmgr/menu/${id}`, params)
+}

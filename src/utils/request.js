@@ -64,17 +64,15 @@ service.interceptors.response.use(
         if (res.code === 2000) {
             return res.data
         }
-        // if (res.code === 4000) {
-        //   return Promise.reject(res)
-        // }
         ElMessage({
-            message: res.error || 'Error',
+            message: res.msg || 'Error',
             type: 'error',
             duration: 3 * 1000
         })
-        return Promise.reject(new Error(res || 'Error'))
+        return Promise.reject(response)
     },
     error => {
+        console.info("11")
         const ErrorHandler = {
             400: "请求错误",
             401: "未授权，请登录",

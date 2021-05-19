@@ -66,7 +66,11 @@ import { getTree } from "../utils/menu";
 export default {
     data() {
         return {
-            menuList: []
+            menuList: [{
+                icon: "el-icon-lx-home",
+                path: "/dashboard",
+                title: "系统首页",
+            }]
         };
     },
     computed: {
@@ -87,9 +91,10 @@ export default {
         this.queryMenuList()
     },
     methods: {
-        queryMenuList(){
+        async queryMenuList(){
             getMenuList().then(data => {
-                this.menuList = getTree(data,0,null,null)
+                let treeData = getTree(data,0,null,null)
+                this.menuList.push(...treeData)
             });
         },
         handleSelect(index, indexPath) {

@@ -17,12 +17,12 @@ export default [
         },
         component: () => import ("../../views/sysmgr/User.vue")
     }, {
-        path: "/sysmgr/upload",
-        name: "/sysmgr/upload",
+        path: "/sysmgr/role",
+        name: "/sysmgr/role",
         meta: {
             parentTitle: '系统管理',
-            title: '上传插件'
+            title: '角色管理'
         },
-        component: () => import ("../../views/sysmgr/Upload.vue")
+        component: () => import ("../../views/sysmgr/Role.vue")
     },
 ];

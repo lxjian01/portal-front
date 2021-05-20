@@ -60,7 +60,7 @@
 
 <script>
 // import bus from "../common/bus";
-import { getMenuList } from "../api/sysmgr";
+import { getMenuList } from "../api/sysmgr/menu";
 import { getTree } from "../utils/menu";
 
 export default {

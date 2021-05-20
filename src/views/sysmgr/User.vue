@@ -14,27 +14,21 @@
                 border
                 style="width: 100%">
             <el-table-column
-                    prop="ptitle"
-                    label="父级菜单"
+                    prop="userCode"
+                    label="用户编码"
                     width="180">
             </el-table-column>
             <el-table-column
-                    prop="title"
-                    label="名称"
-                    width="180">
+                    prop="userName"
+                    label="用户名">
             </el-table-column>
             <el-table-column
-                    prop="path"
-                    label="地址">
+                    prop="phone"
+                    label="电话">
             </el-table-column>
             <el-table-column
-                    prop="icon"
-                    label="图标">
-            </el-table-column>
-            <el-table-column
-                    width="80"
-                    prop="sort"
-                    label="排序">
+                    prop="email"
+                    label="邮箱">
             </el-table-column>
             <el-table-column
                     width="90"
@@ -71,27 +65,17 @@
             @open="openDialog"
             width="60%">
         <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-width="80px" size="medium">
-            <el-form-item label="父级菜单" prop="pid">
-                <el-select v-model="dialogForm.pid" placeholder="请选择">
-                    <el-option
-                            v-for="item in parentMenu"
-                            :key="item.id"
-                            :label="item.title"
-                            :value="item.id">
-                    </el-option>
-                </el-select>
+            <el-form-item label="用户编码" prop="userCode">
+                <el-input v-model="dialogForm.userCode"></el-input>
             </el-form-item>
-            <el-form-item label="标题" prop="title">
-                <el-input v-model="dialogForm.title"></el-input>
+            <el-form-item label="用户名" prop="userName">
+                <el-input v-model="dialogForm.userName"></el-input>
             </el-form-item>
-            <el-form-item label="路径" prop="path">
-                <el-input v-model="dialogForm.path"></el-input>
+            <el-form-item label="电话" prop="phone">
+                <el-input v-model="dialogForm.phone"></el-input>
             </el-form-item>
-            <el-form-item label="图标">
-                <el-input v-model="dialogForm.icon"></el-input>
-            </el-form-item>
-            <el-form-item label="排序">
-                <el-input-number v-model="dialogForm.sort" :min="1" :max="100"></el-input-number>
+            <el-form-item label="邮箱" prop="email">
+                <el-input v-model="dialogForm.email"></el-input>
             </el-form-item>
         </el-form>
         <template #footer>
@@ -105,10 +89,10 @@
 </template>
 
 <script>
-    import { getMenuPage, getParentMenuList, addMenu, editMenu, deleteMenu } from "../../api/sysmgr/menu";
+    import { getUserPage, addUser, editUser, deleteUser } from "../../api/sysmgr/user";
 
     export default {
-        name: 'Menu',
+        name: 'User',
         data() {
             return {
                 queryForm: {
@@ -119,20 +103,19 @@
                 tableData: {},
                 dialogForm: {},
                 dialogFormRules: {
-                    title: [
-                        {required: true, message: '请输入菜单标题', trigger: 'blur'},
+                    userCode: [
+                        {required: true, message: '请输入用户编码', trigger: 'blur'},
                     ],
-                    pid: [
-                        {required: true, message: '请选择父级菜单', trigger: 'blur'},
+                    userName: [
+                        {required: true, message: '请选择用户名', trigger: 'blur'},
                     ],
-                    path: [
-                        {required: true, message: '请输入路由地址', trigger: 'blur'},
+                    phone: [
+                        {required: true, message: '请输入联系电话', trigger: 'blur'},
+                    ],
+                    email: [
+                        {required: true, message: '请输入邮箱', trigger: 'blur'},
                     ],
                 },
-                parentMenu: [{
-                    "id": 0,
-                    "title": "顶级菜单",
-                }],
                 dialogTitle: "",
                 dialogVisible: false,
             };
@@ -142,38 +125,35 @@
         },
         methods: {
             async page() {
-                getMenuPage(this.queryForm).then(data => {
+                getUserPage(this.queryForm).then(data => {
                     this.tableData = data
                 });
             },
             handleAdd(){
                 this.dialogForm = {
                     id: 0,
-                    pid: 0,
-                    title: "",
-                    path: "",
-                    icon: "",
-                    sort: "",
+                    userCode: "",
+                    userName: "",
+                    phone: "",
+                    email: "",
                 }
                 this.dialogVisible = true
-                this.dialogTitle = "添加菜单"
+                this.dialogTitle = "添加用户"
             },
             handleSearch() {
                 this.page()
             },
             handleEdit(index, row) {
-                this.dialogTitle = "编辑菜单"
+                this.dialogTitle = "编辑用户"
                 this.dialogForm = row
                 this.dialogVisible = true
             },
             openDialog(){
-                getParentMenuList().then(data => {
-                    this.parentMenu.push(...data)
-                });
+
             },
             async handleDelete(_, row) {
                 const fn = async () => {
-                    await deleteMenu(row.id)
+                    await deleteUser(row.id)
                     this.successFn(null)
                 }
                 this.$delConfirm(fn)
@@ -187,11 +167,11 @@
                 this.$refs["dialogForm"].validate((valid) => {
                     if (valid) {
                         if(this.dialogForm.id === 0){
-                            addMenu(this.dialogForm).then(data => {
+                            addUser(this.dialogForm).then(data => {
                                 this.successFn(data)
                             });
                         }else{
-                            editMenu(this.dialogForm.id, this.dialogForm).then(data => {
+                            editUser(this.dialogForm.id, this.dialogForm).then(data => {
                                 this.successFn(data)
                             });
                         }

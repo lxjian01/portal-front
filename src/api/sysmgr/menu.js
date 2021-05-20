@@ -1,4 +1,4 @@
-import { GET, POST, PUT, DELETE } from "./_methods"
+import { GET, POST, PUT, DELETE } from "../_methods"
 
 export function getMenuList(params){
     return GET(`/api/portal/sysmgr/menu/list`, params)

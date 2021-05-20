@@ -22,6 +22,37 @@
                     prop="path"
                     label="地址">
             </el-table-column>
+            <el-table-column
+                    prop="icon"
+                    label="图标">
+            </el-table-column>
+            <el-table-column
+                    width="80"
+                    prop="sort"
+                    label="排序">
+            </el-table-column>
+            <el-table-column
+                    width="90"
+                    prop="updateUser"
+                    label="编辑人">
+            </el-table-column>
+            <el-table-column
+                    width="160"
+                    prop="updateTime"
+                    label="编辑时间">
+            </el-table-column>
+            <el-table-column label="操作" width="150">
+                <template #default="scope">
+                    <el-button
+                            size="mini"
+                            type="primary"
+                            @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                    <el-button
+                            size="mini"
+                            type="danger"
+                            @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                </template>
+            </el-table-column>
         </el-table>
         <el-pagination
                 background
@@ -69,7 +100,7 @@
 </template>
 
 <script>
-    import {getMenuPage, getParentMenuList, addMenu, editMenu} from "../../api/sysmgr";
+    import { getMenuPage, getParentMenuList, addMenu, editMenu, deleteMenu } from "../../api/sysmgr";
 
     export default {
         name: 'Menu',
@@ -81,14 +112,7 @@
                     pageSize: 10
                 },
                 tableData: {},
-                dialogForm: {
-                    id: 0,
-                    pid: "",
-                    title: "",
-                    path: "",
-                    icon: "",
-                    sort: "",
-                },
+                dialogForm: {},
                 dialogFormRules: {
                     title: [
                         {required: true, message: '请输入菜单标题', trigger: 'blur'},
@@ -121,6 +145,14 @@
 
             },
             addMenu(){
+                this.dialogForm = {
+                    id: 0,
+                    pid: 0,
+                    title: "",
+                    path: "",
+                    icon: "",
+                    sort: "",
+                }
                 this.dialogVisible = true
                 this.dialogTitle = "添加菜单"
             },
@@ -132,8 +164,18 @@
                     this.parentMenu.push(...data)
                 });
             },
+            handleEdit(index, row) {
+                this.dialogForm = row
+                this.dialogVisible = true
+            },
+            async handleDelete(_, row) {
+                const fn = async () => {
+                    await deleteMenu(row.id)
+                    this.successFn(null)
+                }
+                this.$delConfirm(fn)
+            },
             successFn(data){
-                console.info(data)
                 this.page()
                 this.$message.success('操作成功')
                 this.dialogVisible = false

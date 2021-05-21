@@ -15,23 +15,27 @@
                 style="width: 100%">
             <el-table-column
                     prop="userCode"
-                    label="用户编码"
-                    width="180">
+                    label="账号">
             </el-table-column>
             <el-table-column
                     prop="userName"
-                    label="用户名">
+                    label="姓名">
             </el-table-column>
             <el-table-column
+                    width="160"
                     prop="phone"
                     label="电话">
             </el-table-column>
             <el-table-column
+                    width="180"
                     prop="email"
                     label="邮箱">
             </el-table-column>
             <el-table-column
-                    width="90"
+                    prop="weixin"
+                    label="微信">
+            </el-table-column>
+            <el-table-column
                     prop="updateUser"
                     label="编辑人">
             </el-table-column>
@@ -65,17 +69,20 @@
             @open="openDialog"
             width="60%">
         <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-width="80px" size="medium">
-            <el-form-item label="用户编码" prop="userCode">
+            <el-form-item label="账号" prop="userCode">
                 <el-input v-model="dialogForm.userCode"></el-input>
             </el-form-item>
-            <el-form-item label="用户名" prop="userName">
+            <el-form-item label="姓名" prop="userName">
                 <el-input v-model="dialogForm.userName"></el-input>
             </el-form-item>
-            <el-form-item label="电话" prop="phone">
+            <el-form-item label="电话">
                 <el-input v-model="dialogForm.phone"></el-input>
             </el-form-item>
             <el-form-item label="邮箱" prop="email">
                 <el-input v-model="dialogForm.email"></el-input>
+            </el-form-item>
+            <el-form-item label="微信">
+                <el-input v-model="dialogForm.weixin"></el-input>
             </el-form-item>
         </el-form>
         <template #footer>
@@ -104,13 +111,10 @@
                 dialogForm: {},
                 dialogFormRules: {
                     userCode: [
-                        {required: true, message: '请输入用户编码', trigger: 'blur'},
+                        {required: true, message: '请输入账号', trigger: 'blur'},
                     ],
                     userName: [
-                        {required: true, message: '请选择用户名', trigger: 'blur'},
-                    ],
-                    phone: [
-                        {required: true, message: '请输入联系电话', trigger: 'blur'},
+                        {required: true, message: '请输入姓名', trigger: 'blur'},
                     ],
                     email: [
                         {required: true, message: '请输入邮箱', trigger: 'blur'},
@@ -136,6 +140,7 @@
                     userName: "",
                     phone: "",
                     email: "",
+                    weixin: "",
                 }
                 this.dialogVisible = true
                 this.dialogTitle = "添加用户"

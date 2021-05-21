@@ -166,6 +166,7 @@
                 this.dialogVisible = true
             },
             openDialog(){
+                this.parentMenu = []
                 getParentMenuList().then(data => {
                     this.parentMenu.push(...data)
                 });

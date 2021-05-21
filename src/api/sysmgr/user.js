@@ -8,6 +8,10 @@ export function getUserPage(params){
     return GET(`api/portal/sysmgr/user/page`, params)
 }
 
+export function getUserDetail(id, params){
+    return GET(`/api/portal/sysmgr/user/${id}`, params)
+}
+
 export function addUser(params){
     return POST(`/api/portal/sysmgr/user`, params)
 }

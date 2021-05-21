@@ -36,6 +36,13 @@
                     label="微信">
             </el-table-column>
             <el-table-column
+                    label="角色"
+                    width="180">
+                <template #default="scope">
+                    <span style="margin-left: 6px" v-for="item in scope.row.roles">{{ item }}</span>
+                </template>
+            </el-table-column>
+            <el-table-column
                     prop="updateUser"
                     label="编辑人">
             </el-table-column>
@@ -83,6 +90,16 @@
                 <el-form-item label="微信">
                     <el-input v-model="dialogForm.weixin"></el-input>
                 </el-form-item>
+                <el-form-item label="角色">
+                    <el-select v-model="dialogForm.roles" style="width: 100%;" multiple placeholder="请选择角色">
+                        <el-option
+                                v-for="item in roleOptions"
+                                :key="item.roleCode"
+                                :label="item.roleName"
+                                :value="item.roleCode">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
             </el-form>
             <template #footer>
             <span class="dialog-footer">
@@ -95,7 +112,8 @@
 </template>
 
 <script>
-    import { getUserPage, addUser, editUser, deleteUser } from "../../api/sysmgr/user";
+    import { getUserPage, addUser, editUser, deleteUser, getUserDetail } from "../../api/sysmgr/user";
+    import { getRoleList } from "../../api/sysmgr/role";
 
     export default {
         name: 'User',
@@ -119,6 +137,7 @@
                         {required: true, message: '请输入邮箱', trigger: 'blur'},
                     ],
                 },
+                roleOptions: [],
                 dialogTitle: "",
                 dialogVisible: false,
             };
@@ -140,6 +159,7 @@
                     phone: "",
                     email: "",
                     weixin: "",
+                    roles: [],
                 }
                 this.dialogVisible = true
                 this.dialogTitle = "添加用户"
@@ -147,13 +167,18 @@
             handleSearch() {
                 this.page()
             },
-            handleEdit(index, row) {
+            async handleEdit(index, row) {
                 this.dialogTitle = "编辑用户"
-                this.dialogForm = row
+                getUserDetail(row.id).then(data => {
+                    this.dialogForm = data
+                });
                 this.dialogVisible = true
             },
             openDialog(){
-
+                this.roleOptions = []
+                getRoleList().then(data => {
+                    this.roleOptions.push(...data)
+                });
             },
             async handleDelete(_, row) {
                 const fn = async () => {

@@ -15,6 +15,10 @@
                 style="width: 100%">
             <el-table-column
                     prop="roleName"
+                    label="角色编码">
+            </el-table-column>
+            <el-table-column
+                    prop="roleName"
                     label="角色名">
             </el-table-column>
             <el-table-column
@@ -43,25 +47,27 @@
                 layout="prev, pager, next"
                 :total=tableData.total>
         </el-pagination>
-    </div>
-    <el-dialog
-            title="提示"
-            v-model="dialogVisible"
-            @open="openDialog"
-            width="60%">
-        <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-width="80px" size="medium">
-            <el-form-item label="角色名" prop="roleName">
-                <el-input v-model="dialogForm.roleName"></el-input>
-            </el-form-item>
-        </el-form>
-        <template #footer>
+        <el-dialog
+                title="提示"
+                v-model="dialogVisible"
+                @open="openDialog"
+                width="60%">
+            <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-width="80px" size="medium">
+                <el-form-item label="角色编码" prop="roleCode">
+                    <el-input v-model="dialogForm.roleCode"></el-input>
+                </el-form-item>
+                <el-form-item label="角色名" prop="roleName">
+                    <el-input v-model="dialogForm.roleName"></el-input>
+                </el-form-item>
+            </el-form>
+            <template #footer>
             <span class="dialog-footer">
               <el-button @click="dialogVisible = false">取 消</el-button>
               <el-button type="primary" @click="onSubmit">确 定</el-button>
             </span>
-        </template>
-    </el-dialog>
-
+            </template>
+        </el-dialog>
+    </div>
 </template>
 
 <script>
@@ -79,6 +85,9 @@
                 tableData: {},
                 dialogForm: {},
                 dialogFormRules: {
+                    roleCode: [
+                        {required: true, message: '请输入角色编码', trigger: 'blur'},
+                    ],
                     roleName: [
                         {required: true, message: '请输入角色名', trigger: 'blur'},
                     ],
@@ -99,6 +108,7 @@
             handleAdd(){
                 this.dialogForm = {
                     id: 0,
+                    roleCode: "",
                     roleName: "",
                 }
                 this.dialogVisible = true

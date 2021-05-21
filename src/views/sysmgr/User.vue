@@ -62,37 +62,36 @@
                 layout="prev, pager, next"
                 :total=tableData.total>
         </el-pagination>
-    </div>
-    <el-dialog
-            title="提示"
-            v-model="dialogVisible"
-            @open="openDialog"
-            width="60%">
-        <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-width="80px" size="medium">
-            <el-form-item label="账号" prop="userCode">
-                <el-input v-model="dialogForm.userCode"></el-input>
-            </el-form-item>
-            <el-form-item label="姓名" prop="userName">
-                <el-input v-model="dialogForm.userName"></el-input>
-            </el-form-item>
-            <el-form-item label="电话">
-                <el-input v-model="dialogForm.phone"></el-input>
-            </el-form-item>
-            <el-form-item label="邮箱" prop="email">
-                <el-input v-model="dialogForm.email"></el-input>
-            </el-form-item>
-            <el-form-item label="微信">
-                <el-input v-model="dialogForm.weixin"></el-input>
-            </el-form-item>
-        </el-form>
-        <template #footer>
+        <el-dialog
+                title="提示"
+                v-model="dialogVisible"
+                @open="openDialog"
+                width="60%">
+            <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-width="80px" size="medium">
+                <el-form-item label="账号" prop="userCode">
+                    <el-input v-model="dialogForm.userCode"></el-input>
+                </el-form-item>
+                <el-form-item label="姓名" prop="userName">
+                    <el-input v-model="dialogForm.userName"></el-input>
+                </el-form-item>
+                <el-form-item label="电话">
+                    <el-input v-model="dialogForm.phone"></el-input>
+                </el-form-item>
+                <el-form-item label="邮箱" prop="email">
+                    <el-input v-model="dialogForm.email"></el-input>
+                </el-form-item>
+                <el-form-item label="微信">
+                    <el-input v-model="dialogForm.weixin"></el-input>
+                </el-form-item>
+            </el-form>
+            <template #footer>
             <span class="dialog-footer">
               <el-button @click="dialogVisible = false">取 消</el-button>
               <el-button type="primary" @click="onSubmit">确 定</el-button>
             </span>
-        </template>
-    </el-dialog>
-
+            </template>
+        </el-dialog>
+    </div>
 </template>
 
 <script>

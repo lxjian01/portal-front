@@ -64,44 +64,43 @@
                 layout="prev, pager, next"
                 :total=tableData.total>
         </el-pagination>
-    </div>
-    <el-dialog
-            title="提示"
-            v-model="dialogVisible"
-            @open="openDialog"
-            width="60%">
-        <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-width="80px" size="medium">
-            <el-form-item label="父级菜单" prop="pid">
-                <el-select v-model="dialogForm.pid" placeholder="请选择">
-                    <el-option
-                            v-for="item in parentMenu"
-                            :key="item.id"
-                            :label="item.title"
-                            :value="item.id">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="标题" prop="title">
-                <el-input v-model="dialogForm.title"></el-input>
-            </el-form-item>
-            <el-form-item label="路径" prop="path">
-                <el-input v-model="dialogForm.path"></el-input>
-            </el-form-item>
-            <el-form-item label="图标">
-                <el-input v-model="dialogForm.icon"></el-input>
-            </el-form-item>
-            <el-form-item label="排序">
-                <el-input-number v-model="dialogForm.sort" :min="1" :max="100"></el-input-number>
-            </el-form-item>
-        </el-form>
-        <template #footer>
+        <el-dialog
+                title="提示"
+                v-model="dialogVisible"
+                @open="openDialog"
+                width="60%">
+            <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-width="80px" size="medium">
+                <el-form-item label="父级菜单" prop="pid">
+                    <el-select v-model="dialogForm.pid" placeholder="请选择">
+                        <el-option
+                                v-for="item in parentMenu"
+                                :key="item.id"
+                                :label="item.title"
+                                :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="标题" prop="title">
+                    <el-input v-model="dialogForm.title"></el-input>
+                </el-form-item>
+                <el-form-item label="路径" prop="path">
+                    <el-input v-model="dialogForm.path"></el-input>
+                </el-form-item>
+                <el-form-item label="图标">
+                    <el-input v-model="dialogForm.icon"></el-input>
+                </el-form-item>
+                <el-form-item label="排序">
+                    <el-input-number v-model="dialogForm.sort" :min="1" :max="100"></el-input-number>
+                </el-form-item>
+            </el-form>
+            <template #footer>
             <span class="dialog-footer">
               <el-button @click="dialogVisible = false">取 消</el-button>
               <el-button type="primary" @click="onSubmit">确 定</el-button>
             </span>
-        </template>
-    </el-dialog>
-
+            </template>
+        </el-dialog>
+    </div>
 </template>
 
 <script>

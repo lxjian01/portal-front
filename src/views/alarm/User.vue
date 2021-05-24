@@ -2,7 +2,7 @@
     <div class="container">
         <el-form :inline="true" :model="queryForm" class="demo-form-inline" size="medium">
             <el-form-item label="姓名">
-                <el-input v-model="queryForm.name" placeholder="请输入姓名"></el-input>
+                <el-input v-model="queryForm.userName" placeholder="请输入姓名"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
@@ -95,7 +95,7 @@
         data() {
             return {
                 queryForm: {
-                    name: "",
+                    userName: "",
                     pageIndex: 1,
                     pageSize: 10
                 },

@@ -25,7 +25,7 @@
                     label="角色"
                     width="180">
                 <template #default="scope">
-                    <span style="margin-left: 6px" v-for="item in scope.row.roles">{{ item }}</span>
+                    <span style="margin-left: 6px" v-for="item in scope.row.roles" :key="item">{{ item }}</span>
                 </template>
             </el-table-column>
             <el-table-column

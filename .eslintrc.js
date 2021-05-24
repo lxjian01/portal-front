@@ -36,14 +36,15 @@ module.exports = {
         'import/first': 0,
         // allow debugger during development
         'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-       'vue/no-parsing-error': [2, { 'x-invalid-end-tag': false }],
+        'vue/no-parsing-error': [2, { 'x-invalid-end-tag': false }],
         'no-undef': 'off',
         'prefer-promise-reject-errors': 1,
         'no-eval': 2,
-        'no-unused-vars': 1,
+        'no-unused-vars': "off",
         'no-useless-escape': 0,
         'vue/order-in-components': 0,
         'vue/html-self-closing': 0,
-        'vue/attribute-hyphenation': 0
+        'vue/attribute-hyphenation': 0,
+        "indent": ["off", 2]
     }
 }

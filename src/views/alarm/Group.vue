@@ -1,8 +1,8 @@
 <template>
     <div class="container">
         <el-form :inline="true" :model="queryForm" class="demo-form-inline" size="medium">
-            <el-form-item label="标题">
-                <el-input v-model="queryForm.title" placeholder="标题"></el-input>
+            <el-form-item label="关键字">
+                <el-input v-model="queryForm.keywords" placeholder="请输入角色名或角色编码"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
@@ -14,39 +14,18 @@
                 border
                 style="width: 100%">
             <el-table-column
-                    prop="ptitle"
-                    label="父级菜单"
-                    width="180">
+                    prop="alarmGroupName"
+                    label="告警组名">
             </el-table-column>
             <el-table-column
-                    prop="title"
-                    label="名称"
-                    width="180">
-            </el-table-column>
-            <el-table-column
-                    prop="path"
-                    label="地址">
-            </el-table-column>
-            <el-table-column
-                    prop="icon"
-                    label="图标">
-            </el-table-column>
-            <el-table-column
-                    width="80"
-                    prop="sort"
-                    label="排序">
-            </el-table-column>
-            <el-table-column
-                    width="90"
                     prop="updateUser"
                     label="编辑人">
             </el-table-column>
             <el-table-column
-                    width="160"
                     prop="updateTime"
                     label="编辑时间">
             </el-table-column>
-            <el-table-column label="操作" width="150">
+            <el-table-column label="操作">
                 <template #default="scope">
                     <el-button
                             size="mini"
@@ -70,27 +49,8 @@
                 @open="openDialog"
                 width="60%">
             <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-width="80px" size="medium">
-                <el-form-item label="父级菜单" prop="pid">
-                    <el-select v-model="dialogForm.pid" placeholder="请选择">
-                        <el-option
-                                v-for="item in parentMenu"
-                                :key="item.id"
-                                :label="item.title"
-                                :value="item.id">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="标题" prop="title">
-                    <el-input v-model="dialogForm.title"></el-input>
-                </el-form-item>
-                <el-form-item label="路径" prop="path">
-                    <el-input v-model="dialogForm.path"></el-input>
-                </el-form-item>
-                <el-form-item label="图标">
-                    <el-input v-model="dialogForm.icon"></el-input>
-                </el-form-item>
-                <el-form-item label="排序">
-                    <el-input-number v-model="dialogForm.sort" :min="1" :max="100"></el-input-number>
+                <el-form-item label="告警组名" prop="alarmGroupName">
+                    <el-input v-model="dialogForm.alarmGroupName"></el-input>
                 </el-form-item>
             </el-form>
             <template #footer>
@@ -104,31 +64,24 @@
 </template>
 
 <script>
-    import { getMenuPage, getParentMenuList, addMenu, editMenu, deleteMenu } from "../../api/sysmgr/menu";
+    import { getGroupPage, addGroup, editGroup, deleteGroup } from "../../api/alarm/group";
 
     export default {
-        name: 'Menu',
+        name: 'Group',
         data() {
             return {
                 queryForm: {
-                    title: "",
+                    keywords: "",
                     pageIndex: 1,
                     pageSize: 10
                 },
                 tableData: {},
                 dialogForm: {},
                 dialogFormRules: {
-                    title: [
-                        {required: true, message: '请输入菜单标题', trigger: 'blur'},
-                    ],
-                    pid: [
-                        {required: true, message: '请选择父级菜单', trigger: 'blur'},
-                    ],
-                    path: [
-                        {required: true, message: '请输入路由地址', trigger: 'blur'},
+                    alarmGroupName: [
+                        {required: true, message: '请输入告警组名', trigger: 'blur'},
                     ],
                 },
-                parentMenu: [{"id": 0, "title": "顶级菜单"}],
                 dialogTitle: "",
                 dialogVisible: false,
             };
@@ -138,39 +91,32 @@
         },
         methods: {
             async page() {
-                getMenuPage(this.queryForm).then(data => {
+                getGroupPage(this.queryForm).then(data => {
                     this.tableData = data
                 });
             },
             handleAdd(){
                 this.dialogForm = {
                     id: 0,
-                    pid: 0,
-                    title: "",
-                    path: "",
-                    icon: "",
-                    sort: "",
+                    alarmGroupName: "",
                 }
                 this.dialogVisible = true
-                this.dialogTitle = "添加菜单"
+                this.dialogTitle = "添加角色"
             },
             handleSearch() {
                 this.page()
             },
             handleEdit(index, row) {
-                this.dialogTitle = "编辑菜单"
+                this.dialogTitle = "编辑角色"
                 this.dialogForm = row
                 this.dialogVisible = true
             },
             openDialog(){
-                this.parentMenu = [{"id": 0, "title": "顶级菜单"}]
-                getParentMenuList().then(data => {
-                    this.parentMenu.push(...data)
-                });
+
             },
             async handleDelete(_, row) {
                 const fn = async () => {
-                    await deleteMenu(row.id)
+                    await deleteGroup(row.id)
                     this.successFn(null)
                 }
                 this.$delConfirm(fn)
@@ -184,11 +130,11 @@
                 this.$refs["dialogForm"].validate((valid) => {
                     if (valid) {
                         if(this.dialogForm.id === 0){
-                            addMenu(this.dialogForm).then(data => {
+                            addGroup(this.dialogForm).then(data => {
                                 this.successFn(data)
                             });
                         }else{
-                            editMenu(this.dialogForm.id, this.dialogForm).then(data => {
+                            editGroup(this.dialogForm.id, this.dialogForm).then(data => {
                                 this.successFn(data)
                             });
                         }

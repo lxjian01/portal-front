@@ -14,7 +14,7 @@
                 border
                 style="width: 100%">
             <el-table-column
-                    prop="roleName"
+                    prop="roleCode"
                     label="角色编码">
             </el-table-column>
             <el-table-column

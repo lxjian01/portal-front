@@ -1,12 +1,20 @@
 // 系统内置页面，正式使用时也不应该被删除
 export default [
     {
+        path: "/alarm/group",
+        name: "/alarm/group",
+        meta: {
+            parentTitle: '告警配置',
+            title: '告警组'
+        },
+        component: () => import ("../../views/alarm/Group.vue")
+    }, {
         path: "/alarm/user",
         name: "/alarm/user",
         meta: {
-            parentTitle: '系统管理',
-            title: '菜单管理'
+            parentTitle: '告警配置',
+            title: '告警联系人'
         },
         component: () => import ("../../views/alarm/User.vue")
-    }
+    },
 ];

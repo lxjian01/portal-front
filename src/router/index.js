@@ -2,6 +2,7 @@ import defaultSettings from '../settings'
 import {createRouter, createWebHistory} from "vue-router";
 import Index from "../views/Index.vue";
 import sysmgr from "./modules/sysmgr";
+import alarm from "./modules/alarm";
 import error from "./modules/error";
 
 const routes = [
@@ -19,6 +20,7 @@ const routes = [
         component: Index,
         children: [
             ...sysmgr,
+            ...alarm,
             ...error,
             {
                 path: "/dashboard",

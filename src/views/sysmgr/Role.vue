@@ -1,8 +1,8 @@
 <template>
     <div class="container">
         <el-form :inline="true" :model="queryForm" class="demo-form-inline" size="medium">
-            <el-form-item label="标题">
-                <el-input v-model="queryForm.title" placeholder="标题"></el-input>
+            <el-form-item label="关键字">
+                <el-input v-model="queryForm.keywords" placeholder="请输入角色名或角色编码"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
@@ -78,7 +78,7 @@
         data() {
             return {
                 queryForm: {
-                    title: "",
+                    keywords: "",
                     pageIndex: 1,
                     pageSize: 10
                 },

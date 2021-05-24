@@ -1,8 +1,8 @@
 <template>
     <div class="container">
         <el-form :inline="true" :model="queryForm" class="demo-form-inline" size="medium">
-            <el-form-item label="关键字">
-                <el-input v-model="queryForm.keywords" placeholder="请输入账号或姓名"></el-input>
+            <el-form-item label="姓名">
+                <el-input v-model="queryForm.name" placeholder="请输入姓名"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
@@ -14,19 +14,22 @@
                 border
                 style="width: 100%">
             <el-table-column
-                    prop="userCode"
-                    label="账号">
-            </el-table-column>
-            <el-table-column
                     prop="userName"
                     label="姓名">
             </el-table-column>
             <el-table-column
-                    label="角色"
-                    width="180">
-                <template #default="scope">
-                    <span style="margin-left: 6px" v-for="item in scope.row.roles">{{ item }}</span>
-                </template>
+                    width="160"
+                    prop="phone"
+                    label="电话">
+            </el-table-column>
+            <el-table-column
+                    width="180"
+                    prop="email"
+                    label="邮箱">
+            </el-table-column>
+            <el-table-column
+                    prop="weixin"
+                    label="微信">
             </el-table-column>
             <el-table-column
                     prop="updateUser"
@@ -61,21 +64,17 @@
                 @open="openDialog"
                 width="60%">
             <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-width="80px" size="medium">
-                <el-form-item label="账号" prop="userCode">
-                    <el-input v-model="dialogForm.userCode"></el-input>
-                </el-form-item>
                 <el-form-item label="姓名" prop="userName">
                     <el-input v-model="dialogForm.userName"></el-input>
                 </el-form-item>
-                <el-form-item label="角色">
-                    <el-select v-model="dialogForm.roles" style="width: 100%;" multiple placeholder="请选择角色">
-                        <el-option
-                                v-for="item in roleOptions"
-                                :key="item.roleCode"
-                                :label="item.roleName"
-                                :value="item.roleCode">
-                        </el-option>
-                    </el-select>
+                <el-form-item label="电话">
+                    <el-input v-model="dialogForm.phone"></el-input>
+                </el-form-item>
+                <el-form-item label="邮箱" prop="email">
+                    <el-input v-model="dialogForm.email"></el-input>
+                </el-form-item>
+                <el-form-item label="微信">
+                    <el-input v-model="dialogForm.weixin"></el-input>
                 </el-form-item>
             </el-form>
             <template #footer>
@@ -89,24 +88,20 @@
 </template>
 
 <script>
-    import { getUserPage, addUser, editUser, deleteUser, getUserDetail } from "../../api/sysmgr/user";
-    import { getRoleList } from "../../api/sysmgr/role";
+    import { getUserPage, addUser, editUser, deleteUser } from "../../api/alarm/user";
 
     export default {
         name: 'User',
         data() {
             return {
                 queryForm: {
-                    keywords: "",
+                    name: "",
                     pageIndex: 1,
                     pageSize: 10
                 },
                 tableData: {},
                 dialogForm: {},
                 dialogFormRules: {
-                    userCode: [
-                        {required: true, message: '请输入账号', trigger: 'blur'},
-                    ],
                     userName: [
                         {required: true, message: '请输入姓名', trigger: 'blur'},
                     ],
@@ -114,7 +109,6 @@
                         {required: true, message: '请输入邮箱', trigger: 'blur'},
                     ],
                 },
-                roleOptions: [],
                 dialogTitle: "",
                 dialogVisible: false,
             };
@@ -131,9 +125,10 @@
             handleAdd(){
                 this.dialogForm = {
                     id: 0,
-                    userCode: "",
                     userName: "",
-                    roles: [],
+                    phone: "",
+                    email: "",
+                    weixin: "",
                 }
                 this.dialogVisible = true
                 this.dialogTitle = "添加用户"
@@ -143,16 +138,11 @@
             },
             async handleEdit(index, row) {
                 this.dialogTitle = "编辑用户"
-                getUserDetail(row.id).then(data => {
-                    this.dialogForm = data
-                });
+                this.dialogForm = row
                 this.dialogVisible = true
             },
             openDialog(){
-                this.roleOptions = []
-                getRoleList().then(data => {
-                    this.roleOptions.push(...data)
-                });
+
             },
             async handleDelete(_, row) {
                 const fn = async () => {

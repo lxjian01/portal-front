@@ -18,6 +18,13 @@
                     label="告警组名">
             </el-table-column>
             <el-table-column
+                    label="告警组成员"
+                    width="180">
+                <template #default="scope">
+                    <span style="margin-left: 6px" v-for="item in scope.row.users" :key="item">{{ item }}</span>
+                </template>
+            </el-table-column>
+            <el-table-column
                     prop="updateUser"
                     label="编辑人">
             </el-table-column>

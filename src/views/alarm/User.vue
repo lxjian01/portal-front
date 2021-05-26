@@ -122,7 +122,7 @@
                     this.tableData = data
                 });
             },
-            handleAdd(){
+            dialogFormReset(){
                 this.dialogForm = {
                     id: 0,
                     userName: "",
@@ -130,6 +130,9 @@
                     email: "",
                     weixin: "",
                 }
+            },
+            handleAdd(){
+                this.dialogFormReset()
                 this.dialogVisible = true
                 this.dialogTitle = "添加用户"
             },

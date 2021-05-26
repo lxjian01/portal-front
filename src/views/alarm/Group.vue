@@ -14,7 +14,7 @@
                 border
                 style="width: 100%">
             <el-table-column
-                    prop="alarmGroupName"
+                    prop="groupName"
                     label="告警组名">
             </el-table-column>
             <el-table-column
@@ -48,9 +48,18 @@
                 v-model="dialogVisible"
                 @open="openDialog"
                 width="60%">
-            <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-width="80px" size="medium">
-                <el-form-item label="告警组名" prop="alarmGroupName">
-                    <el-input v-model="dialogForm.alarmGroupName"></el-input>
+            <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-width="100px" size="medium">
+                <el-form-item label="告警组名" prop="groupName">
+                    <el-input v-model="dialogForm.groupName"></el-input>
+                </el-form-item>
+                <el-form-item label="告警组成员">
+                    <el-transfer
+                            v-model="dialogForm.users"
+                            filterable
+                            :filter-method="filterMethod"
+                            filter-placeholder="请输入联系人姓名"
+                            :titles="transferTitles"
+                            :data="transferData"/>
                 </el-form-item>
             </el-form>
             <template #footer>
@@ -64,21 +73,35 @@
 </template>
 
 <script>
-    import { getGroupPage, addGroup, editGroup, deleteGroup } from "../../api/alarm/group";
+    import { getGroupPage, addGroup, editGroup, deleteGroup, getGroupDetail } from "../../api/alarm/group";
+    import { getUserList } from "../../api/alarm/user";
 
     export default {
         name: 'Group',
         data() {
+            const dialogFormData = _ => {
+                const data = [];
+                for (let i = 1; i <= 15; i++) {
+                    data.push({
+                        key: i,
+                        label: `备选项 ${ i }`,
+                        disabled: i % 4 === 0
+                    });
+                }
+                return data;
+            };
             return {
+                transferData: [],
+                transferTitles: ["联系人","已选联系人"],
                 queryForm: {
                     keywords: "",
                     pageIndex: 1,
                     pageSize: 10
                 },
                 tableData: {},
-                dialogForm: {},
+                dialogForm: dialogFormData,
                 dialogFormRules: {
-                    alarmGroupName: [
+                    groupName: [
                         {required: true, message: '请输入告警组名', trigger: 'blur'},
                     ],
                 },
@@ -94,12 +117,25 @@
                 getGroupPage(this.queryForm).then(data => {
                     this.tableData = data
                 });
+                this.transferData = []
+                getUserList().then(data => {
+                    data.forEach((user, index) => {
+                        this.transferData.push({key: user.id, label: user.userName});
+                    });
+                });
             },
-            handleAdd(){
+            dialogFormReset(){
                 this.dialogForm = {
                     id: 0,
-                    alarmGroupName: "",
+                    groupName: "",
+                    users: [],
                 }
+            },
+            filterMethod(query, item) {
+                return item.label.indexOf(query) > -1;
+            },
+            handleAdd(){
+                this.dialogFormReset()
                 this.dialogVisible = true
                 this.dialogTitle = "添加角色"
             },
@@ -108,7 +144,13 @@
             },
             handleEdit(index, row) {
                 this.dialogTitle = "编辑角色"
-                this.dialogForm = row
+                this.dialogFormReset()
+                getGroupDetail(row.id).then(data => {
+                    if(data.users === null){
+                        data.users = []
+                    }
+                    this.dialogForm = data
+                });
                 this.dialogVisible = true
             },
             openDialog(){

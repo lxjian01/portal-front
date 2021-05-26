@@ -142,7 +142,7 @@
                     this.tableData = data
                 });
             },
-            handleAdd(){
+            dialogFormReset(){
                 this.dialogForm = {
                     id: 0,
                     pid: 0,
@@ -151,6 +151,9 @@
                     icon: "",
                     sort: "",
                 }
+            },
+            handleAdd(){
+                this.dialogFormReset()
                 this.dialogVisible = true
                 this.dialogTitle = "添加菜单"
             },

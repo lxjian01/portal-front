@@ -128,13 +128,16 @@
                     this.tableData = data
                 });
             },
-            handleAdd(){
+            dialogFormReset(){
                 this.dialogForm = {
                     id: 0,
                     userCode: "",
                     userName: "",
                     roles: [],
                 }
+            },
+            handleAdd(){
+                this.dialogFormReset()
                 this.dialogVisible = true
                 this.dialogTitle = "添加用户"
             },
@@ -143,6 +146,7 @@
             },
             async handleEdit(index, row) {
                 this.dialogTitle = "编辑用户"
+                this.dialogFormReset()
                 getUserDetail(row.id).then(data => {
                     this.dialogForm = data
                 });

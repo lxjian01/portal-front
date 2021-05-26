@@ -19,4 +19,3 @@ export function getUserPage(params){
 export function getUserList(params){
     return GET(`/api/portal/alarm/user/list`, params)
 }
-

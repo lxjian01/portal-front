@@ -12,8 +12,11 @@ export function deleteGroup(id, params){
     return DELETE(`/api/portal/alarm/group/${id}`, params)
 }
 
-
 export function getGroupPage(params){
     return GET(`api/portal/alarm/group/page`, params)
+}
+
+export function getGroupDetail(id, params){
+    return GET(`/api/portal/alarm/group/${id}`, params)
 }
 

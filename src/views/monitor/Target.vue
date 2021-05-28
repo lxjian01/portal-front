@@ -1,8 +1,8 @@
 <template>
     <div class="container">
         <el-form :inline="true" :model="queryForm" class="demo-form-inline" size="medium">
-            <el-form-item label="名称">
-                <el-input v-model="queryForm.keywords" style="width: 300px;" placeholder="请输入名称"></el-input>
+            <el-form-item label="关键字">
+                <el-input v-model="queryForm.keyworkds" style="width: 300px;" placeholder="请输入编码、名称、prometheus url"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
@@ -22,16 +22,8 @@
                     label="编码">
             </el-table-column>
             <el-table-column
-                    prop="exporter"
-                    label="exporter">
-            </el-table-column>
-            <el-table-column
-                    prop="template"
-                    label="模板">
-            </el-table-column>
-            <el-table-column
-                    prop="remark"
-                    label="备注">
+                    prop="prometheusUrl"
+                    label="prometheus url">
             </el-table-column>
             <el-table-column
                     prop="updateUser"
@@ -67,19 +59,13 @@
                 width="60%">
             <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-width="130px" size="medium">
                 <el-form-item label="名称" prop="name">
-                    <el-input v-model="dialogForm.name" placeholder="请输入名称"></el-input>
+                    <el-input v-model="dialogForm.name"></el-input>
                 </el-form-item>
                 <el-form-item label="编码" prop="code">
-                    <el-input v-model="dialogForm.code" placeholder="eg：computer、mysql、kafka"></el-input>
+                    <el-input v-model="dialogForm.code"></el-input>
                 </el-form-item>
-                <el-form-item label="exporter" prop="exporter">
-                    <el-input v-model="dialogForm.exporter" placeholder="请输入exporter名称"></el-input>
-                </el-form-item>
-                <el-form-item label="模板">
-                    <el-input v-model="dialogForm.template"></el-input>
-                </el-form-item>
-                <el-form-item label="备注">
-                    <el-input v-model="dialogForm.remark"></el-input>
+                <el-form-item label="prometheus url" prop="prometheusUrl">
+                    <el-input v-model="dialogForm.prometheusUrl"></el-input>
                 </el-form-item>
             </el-form>
             <template #footer>
@@ -93,14 +79,14 @@
 </template>
 
 <script>
-    import { getComponentPage, addComponent, editComponent, deleteComponent } from "../../api/monitor/component";
+    import { getClusterPage, addCluster, editCluster, deleteCluster } from "../../api/monitor/cluster";
 
     export default {
-        name: 'Component',
+        name: 'Cluster',
         data() {
             return {
                 queryForm: {
-                    keywords: "",
+                    keyworkds: "",
                     pageIndex: 1,
                     pageSize: 10
                 },
@@ -113,8 +99,8 @@
                     name: [
                         {required: true, message: '请输入名称', trigger: 'blur'},
                     ],
-                    exporter: [
-                        {required: true, message: '请输入exporter名称', trigger: 'blur'},
+                    prometheusUrl: [
+                        {required: true, message: '请输入prometheus url', trigger: 'blur'},
                     ],
                 },
                 dialogTitle: "",
@@ -126,7 +112,7 @@
         },
         methods: {
             async page() {
-                getComponentPage(this.queryForm).then(data => {
+                getClusterPage(this.queryForm).then(data => {
                     this.tableData = data
                 });
             },
@@ -135,21 +121,19 @@
                     id: 0,
                     code: "",
                     name: "",
-                    exporter: "",
-                    template: "",
-                    remark: "",
+                    prometheusUrl: "",
                 }
             },
             handleAdd(){
                 this.dialogFormReset()
                 this.dialogVisible = true
-                this.dialogTitle = "添加组件"
+                this.dialogTitle = "添加集群"
             },
             handleSearch() {
                 this.page()
             },
             async handleEdit(index, row) {
-                this.dialogTitle = "编辑组件"
+                this.dialogTitle = "编辑集群"
                 this.dialogForm = row
                 this.dialogVisible = true
             },
@@ -158,7 +142,7 @@
             },
             async handleDelete(_, row) {
                 const fn = async () => {
-                    await deleteComponent(row.id)
+                    await deleteCluster(row.id)
                     this.successFn(null)
                 }
                 this.$delConfirm(fn)
@@ -172,11 +156,11 @@
                 this.$refs["dialogForm"].validate((valid) => {
                     if (valid) {
                         if(this.dialogForm.id === 0){
-                            addComponent(this.dialogForm).then(data => {
+                            addCluster(this.dialogForm).then(data => {
                                 this.successFn(data)
                             });
                         }else{
-                            editComponent(this.dialogForm.id, this.dialogForm).then(data => {
+                            editCluster(this.dialogForm.id, this.dialogForm).then(data => {
                                 this.successFn(data)
                             });
                         }

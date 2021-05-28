@@ -16,5 +16,13 @@ export default [
             title: '监控组件'
         },
         component: () => import ("../../views/monitor/Component")
+    }, {
+        path: "/monitor/target",
+        name: "/monitor/target",
+        meta: {
+            parentTitle: '监控配置',
+            title: '监控目标'
+        },
+        component: () => import ("../../views/monitor/Target")
     }
 ];

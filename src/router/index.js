@@ -2,6 +2,7 @@ import defaultSettings from '../settings'
 import {createRouter, createWebHistory} from "vue-router";
 import Index from "../views/Index.vue";
 import sysmgr from "./modules/sysmgr";
+import monitor from "./modules/monitor";
 import alarm from "./modules/alarm";
 import error from "./modules/error";
 
@@ -20,6 +21,7 @@ const routes = [
         component: Index,
         children: [
             ...sysmgr,
+            ...monitor,
             ...alarm,
             ...error,
             {

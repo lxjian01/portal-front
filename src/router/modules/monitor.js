@@ -4,9 +4,17 @@ export default [
         path: "/monitor/cluster",
         name: "/monitor/cluster",
         meta: {
-            parentTitle: '监控管理',
+            parentTitle: '监控配置',
             title: '集群管理'
         },
         component: () => import ("../../views/monitor/Cluster")
+    }, {
+        path: "/monitor/component",
+        name: "/monitor/component",
+        meta: {
+            parentTitle: '监控配置',
+            title: '监控组件'
+        },
+        component: () => import ("../../views/monitor/Component")
     }
 ];

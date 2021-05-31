@@ -1,23 +1,23 @@
 <template>
     <div class="container">
         <el-form :inline="true" :model="queryForm" class="demo-form-inline" size="medium">
-            <el-form-item label="集群" prop="monitorClusterCode">
-                <el-select v-model="queryForm.monitorClusterCode" placeholder="请选择">
+            <el-form-item label="集群" prop="monitorClusterId">
+                <el-select v-model="queryForm.monitorClusterId" placeholder="请选择">
                     <el-option
-                            v-for="item in monitorClusterList"
-                            :key="item.code"
+                            v-for="item in monitorClusterQueryList"
+                            :key="item.id"
                             :label="item.name"
-                            :value="item.code">
+                            :value="item.id">
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="集群" prop="monitorComponentCode">
-                <el-select v-model="queryForm.monitorComponentCode" placeholder="请选择">
+            <el-form-item label="组件" prop="monitorComponentId">
+                <el-select v-model="queryForm.monitorComponentId" placeholder="请选择">
                     <el-option
-                            v-for="item in monitorComponentList"
-                            :key="item.code"
+                            v-for="item in monitorComponentQueryList"
+                            :key="item.id"
                             :label="item.name"
-                            :value="item.code">
+                            :value="item.id">
                     </el-option>
                 </el-select>
             </el-form-item>
@@ -101,14 +101,51 @@
                 @open="openDialog"
                 width="60%">
             <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-width="130px" size="medium">
+                <el-form-item label="集群" prop="monitorClusterId">
+                    <el-select v-model="dialogForm.monitorClusterId" placeholder="请选择">
+                        <el-option
+                                v-for="item in monitorClusterList"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="组件" prop="monitorComponentId">
+                    <el-select v-model="dialogForm.monitorComponentId" placeholder="请选择">
+                        <el-option
+                                v-for="item in monitorComponentList"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="告警组" prop="alarmGroupIds">
+                    <el-select v-model="dialogForm.alarmGroupIds" multiple placeholder="请选择">
+                        <el-option
+                                v-for="item in alarmGroupList"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
                 <el-form-item label="名称" prop="name">
                     <el-input v-model="dialogForm.name"></el-input>
                 </el-form-item>
-                <el-form-item label="编码" prop="code">
-                    <el-input v-model="dialogForm.code"></el-input>
+                <el-form-item label="URL" prop="url">
+                    <el-input v-model="dialogForm.url"></el-input>
                 </el-form-item>
-                <el-form-item label="prometheus url" prop="prometheusUrl">
-                    <el-input v-model="dialogForm.prometheusUrl"></el-input>
+                <el-form-item label="频率" prop="interval">
+                    <el-select v-model="dialogForm.interval" placeholder="请选择">
+                        <el-option
+                                v-for="item in intervalList"
+                                :key="item"
+                                :label="item"
+                                :value="item">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
             </el-form>
             <template #footer>
@@ -125,30 +162,41 @@
     import { getTargetPage, addTarget, deleteTarget } from "../../api/monitor/target";
     import { getClusterList } from "../../api/monitor/cluster";
     import { getComponentList } from "../../api/monitor/component";
+    import { getGroupList } from "../../api/alarm/group";
     export default {
         name: 'Target',
         data() {
             return {
                 queryForm: {
-                    monitorClusterCode: "",
-                    monitorComponentCode: "",
+                    monitorClusterId: 0,
+                    monitorComponentId: 0,
                     keyworkds: "",
                     pageIndex: 1,
                     pageSize: 10
                 },
                 tableData: {},
                 dialogForm: {},
+                intervalList: ["30s","1m","2m","3m","4m","5m"],
                 monitorClusterList:[],
+                monitorClusterQueryList: [],
                 monitorComponentList:[],
+                monitorComponentQueryList:[],
+                alarmGroupList: [],
                 dialogFormRules: {
-                    code: [
-                        {required: true, message: '请输入编码', trigger: 'blur'},
+                    monitorClusterId: [
+                        {required: true, message: '请选择集群', trigger: 'blur'},
+                    ],
+                    monitorComponentId: [
+                        {required: true, message: '请选择组件', trigger: 'blur'},
                     ],
                     name: [
                         {required: true, message: '请输入名称', trigger: 'blur'},
                     ],
-                    prometheusUrl: [
-                        {required: true, message: '请输入prometheus url', trigger: 'blur'},
+                    url: [
+                        {required: true, message: '请输入url', trigger: 'blur'},
+                    ],
+                    interval: [
+                        {required: true, message: '请选择频率', trigger: 'blur'},
                     ],
                 },
                 dialogTitle: "",
@@ -160,13 +208,21 @@
         },
         methods: {
             async page() {
-                this.monitorClusterList = [{code: "", name: "全部"}]
+                this.monitorClusterList = []
+                this.monitorClusterQueryList = [{id: 0, name: "全部"}]
                 getClusterList().then(data => {
                     this.monitorClusterList.push(...data)
+                    this.monitorClusterQueryList.push(...data)
                 });
-                this.monitorComponentList = [{code: "", name: "全部"}]
+                this.monitorComponentList = []
+                this.monitorComponentQueryList = [{id: 0, name: "全部"}]
                 getComponentList().then(data => {
                     this.monitorComponentList.push(...data)
+                    this.monitorComponentQueryList.push(...data)
+                });
+                this.alarmGroupList = []
+                getGroupList().then(data => {
+                    this.alarmGroupList.push(...data)
                 });
                 getTargetPage(this.queryForm).then(data => {
                     this.tableData = data
@@ -175,9 +231,12 @@
             dialogFormReset(){
                 this.dialogForm = {
                     id: 0,
-                    code: "",
+                    alarmGroupIds: [],
+                    monitorClusterId: null,
+                    monitorComponentId: null,
                     name: "",
-                    prometheusUrl: "",
+                    url: "",
+                    interval: "",
                 }
             },
             handleAdd(){

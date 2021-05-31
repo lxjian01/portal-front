@@ -14,7 +14,7 @@
                 border
                 style="width: 100%">
             <el-table-column
-                    prop="groupName"
+                    prop="name"
                     label="告警组名">
             </el-table-column>
             <el-table-column
@@ -56,8 +56,8 @@
                 @open="openDialog"
                 width="60%">
             <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-width="100px" size="medium">
-                <el-form-item label="告警组名" prop="groupName">
-                    <el-input v-model="dialogForm.groupName"></el-input>
+                <el-form-item label="告警组名" prop="name">
+                    <el-input v-model="dialogForm.name"></el-input>
                 </el-form-item>
                 <el-form-item label="告警组成员">
                     <el-transfer
@@ -108,7 +108,7 @@
                 tableData: {},
                 dialogForm: dialogFormData,
                 dialogFormRules: {
-                    groupName: [
+                    name: [
                         {required: true, message: '请输入告警组名', trigger: 'blur'},
                     ],
                 },
@@ -134,7 +134,7 @@
             dialogFormReset(){
                 this.dialogForm = {
                     id: 0,
-                    groupName: "",
+                    name: "",
                     users: [],
                 }
             },

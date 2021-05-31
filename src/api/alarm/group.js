@@ -20,3 +20,8 @@ export function getGroupDetail(id, params){
     return GET(`/api/portal/alarm/group/${id}`, params)
 }
 
+export function getGroupList(params){
+    return GET(`/api/portal/alarm/group/list`, params)
+}
+
+

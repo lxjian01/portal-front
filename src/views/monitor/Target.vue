@@ -1,6 +1,26 @@
 <template>
     <div class="container">
         <el-form :inline="true" :model="queryForm" class="demo-form-inline" size="medium">
+            <el-form-item label="集群" prop="monitorClusterCode">
+                <el-select v-model="queryForm.monitorClusterCode" placeholder="请选择">
+                    <el-option
+                            v-for="item in monitorClusterList"
+                            :key="item.code"
+                            :label="item.name"
+                            :value="item.code">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="集群" prop="monitorComponentCode">
+                <el-select v-model="queryForm.monitorComponentCode" placeholder="请选择">
+                    <el-option
+                            v-for="item in monitorComponentList"
+                            :key="item.code"
+                            :label="item.name"
+                            :value="item.code">
+                    </el-option>
+                </el-select>
+            </el-form-item>
             <el-form-item label="关键字">
                 <el-input v-model="queryForm.keyworkds" style="width: 300px;" placeholder="请输入编码、名称、prometheus url"></el-input>
             </el-form-item>
@@ -29,6 +49,15 @@
                     <span>名称：{{ scope.row.monitorComponentCode}}</span>
                     <br>
                     <span>exporter：{{ scope.row.exporter}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    label="告警组">
+                <template #default="scope">
+                    <div v-for="(item,index) in scope.row.alarmGroupList" :key="index">
+                        <span>{{ item.alarmGroupName }}</span>
+                        <br>
+                    </div>
                 </template>
             </el-table-column>
             <el-table-column
@@ -94,18 +123,23 @@
 
 <script>
     import { getTargetPage, addTarget, deleteTarget } from "../../api/monitor/target";
-
+    import { getClusterList } from "../../api/monitor/cluster";
+    import { getComponentList } from "../../api/monitor/component";
     export default {
         name: 'Target',
         data() {
             return {
                 queryForm: {
+                    monitorClusterCode: "",
+                    monitorComponentCode: "",
                     keyworkds: "",
                     pageIndex: 1,
                     pageSize: 10
                 },
                 tableData: {},
                 dialogForm: {},
+                monitorClusterList:[],
+                monitorComponentList:[],
                 dialogFormRules: {
                     code: [
                         {required: true, message: '请输入编码', trigger: 'blur'},
@@ -126,6 +160,14 @@
         },
         methods: {
             async page() {
+                this.monitorClusterList = [{code: "", name: "全部"}]
+                getClusterList().then(data => {
+                    this.monitorClusterList.push(...data)
+                });
+                this.monitorComponentList = [{code: "", name: "全部"}]
+                getComponentList().then(data => {
+                    this.monitorComponentList.push(...data)
+                });
                 getTargetPage(this.queryForm).then(data => {
                     this.tableData = data
                 });

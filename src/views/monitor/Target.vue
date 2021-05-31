@@ -14,20 +14,34 @@
                 border
                 style="width: 100%">
             <el-table-column
+                    label="集群">
+                <template #default="scope">
+                    <span>编码：{{ scope.row.monitorClusterName}}</span>
+                    <br>
+                    <span>名称：{{ scope.row.monitorClusterCode}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    label="组件">
+                <template #default="scope">
+                    <span>编码：{{ scope.row.monitorComponentName}}</span>
+                    <br>
+                    <span>名称：{{ scope.row.monitorComponentCode}}</span>
+                    <br>
+                    <span>exporter：{{ scope.row.exporter}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column
                     prop="name"
                     label="名称">
             </el-table-column>
             <el-table-column
-                    prop="code"
-                    label="编码">
+                    prop="url"
+                    label="目标地址">
             </el-table-column>
             <el-table-column
-                    prop="prometheusUrl"
-                    label="prometheus url">
-            </el-table-column>
-            <el-table-column
-                    prop="updateUser"
-                    label="编辑人">
+                    prop="interval"
+                    label="频率">
             </el-table-column>
             <el-table-column
                     width="160"
@@ -79,10 +93,10 @@
 </template>
 
 <script>
-    import { getClusterPage, addCluster, editCluster, deleteCluster } from "../../api/monitor/cluster";
+    import { getTargetPage, addTarget, deleteTarget } from "../../api/monitor/target";
 
     export default {
-        name: 'Cluster',
+        name: 'Target',
         data() {
             return {
                 queryForm: {
@@ -112,7 +126,7 @@
         },
         methods: {
             async page() {
-                getClusterPage(this.queryForm).then(data => {
+                getTargetPage(this.queryForm).then(data => {
                     this.tableData = data
                 });
             },
@@ -142,7 +156,7 @@
             },
             async handleDelete(_, row) {
                 const fn = async () => {
-                    await deleteCluster(row.id)
+                    await deleteTarget(row.id)
                     this.successFn(null)
                 }
                 this.$delConfirm(fn)
@@ -156,13 +170,11 @@
                 this.$refs["dialogForm"].validate((valid) => {
                     if (valid) {
                         if(this.dialogForm.id === 0){
-                            addCluster(this.dialogForm).then(data => {
+                            addTarget(this.dialogForm).then(data => {
                                 this.successFn(data)
                             });
                         }else{
-                            editCluster(this.dialogForm.id, this.dialogForm).then(data => {
-                                this.successFn(data)
-                            });
+                            this.successFn(data)
                         }
                     } else {
                         console.log('error submit!!');

@@ -7,7 +7,7 @@
         "build:sit": "vue-cli-service build --mode sit",
         "build:uat": "vue-cli-service build --mode uat",
         "build:prod": "vue-cli-service build --mode prod",
-        "lint": "eslint --ext .js,.vue src"
+        "lint": "eslint --fix --ext .js,.vue src"
     },
     "dependencies": {
         "axios": "^0.21.1",

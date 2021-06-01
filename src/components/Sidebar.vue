@@ -1,61 +1,61 @@
 <template>
-    <div class="sidebar">
-        <el-menu
-            class="sidebar-el-menu"
-            :default-active="activeMenu"
-            :default-openeds="openedMenus"
-            :collapse="collapse"
-            @select="handleSelect"
-            @open="handleOpen"
-            @close="handleClose"
-            background-color="#324157"
-            text-color="#bfcbd9"
-            active-text-color="#20a0ff"
-            unique-opened
-        >
-            <template v-for="item in menuList">
-                <template v-if="item.children">
-                    <el-submenu
-                            :index="item.path"
-                            :path="item.path"
-                            :key="item.path">
-                        <template #title>
-                            <i :class="item.icon"></i>
-                            <span>{{ item.title }}</span>
-                        </template>
-                        <template v-for="subItem in item.children">
-                            <el-submenu
-                                v-if="subItem.children"
-                                :index="subItem.path"
-                                :path="subItem.path"
-                                :key="subItem.path"
-                            >
-                                <template #title>{{ subItem.title }}</template>
-                            </el-submenu>
-                            <el-menu-item
-                                v-else
-                                :index="subItem.path"
-                                :path="subItem.path"
-                                :key="subItem.path"
-                            >
-                                {{ subItem.title }}
-                            </el-menu-item>
-                        </template>
-                    </el-submenu>
-                </template>
-                <template v-else>
-                    <el-menu-item
-                            :index="item.path"
-                            :path="item.path"
-                            :key="item.path"
-                    >
-                        <i :class="item.icon"></i>
-                        <template #title>{{ item.title }}</template>
-                    </el-menu-item>
-                </template>
+  <div class="sidebar">
+    <el-menu
+      class="sidebar-el-menu"
+      :default-active="activeMenu"
+      :default-openeds="openedMenus"
+      :collapse="collapse"
+      @select="handleSelect"
+      @open="handleOpen"
+      @close="handleClose"
+      background-color="#324157"
+      text-color="#bfcbd9"
+      active-text-color="#20a0ff"
+      unique-opened
+    >
+      <template v-for="item in menuList">
+        <template v-if="item.children">
+          <el-submenu
+            :index="item.path"
+            :path="item.path"
+            :key="item.path">
+            <template #title>
+              <i :class="item.icon"></i>
+              <span>{{ item.title }}</span>
             </template>
-        </el-menu>
-    </div>
+            <template v-for="subItem in item.children">
+              <el-submenu
+                v-if="subItem.children"
+                :index="subItem.path"
+                :path="subItem.path"
+                :key="subItem.path"
+              >
+                <template #title>{{ subItem.title }}</template>
+              </el-submenu>
+              <el-menu-item
+                v-else
+                :index="subItem.path"
+                :path="subItem.path"
+                :key="subItem.path"
+              >
+                {{ subItem.title }}
+              </el-menu-item>
+            </template>
+          </el-submenu>
+        </template>
+        <template v-else>
+          <el-menu-item
+            :index="item.path"
+            :path="item.path"
+            :key="item.path"
+          >
+            <i :class="item.icon"></i>
+            <template #title>{{ item.title }}</template>
+          </el-menu-item>
+        </template>
+      </template>
+    </el-menu>
+  </div>
 </template>
 
 <script>

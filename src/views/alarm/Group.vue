@@ -1,82 +1,82 @@
 <template>
-    <div class="container">
-        <el-form :inline="true" :model="queryForm" class="demo-form-inline" size="medium">
-            <el-form-item label="关键字">
-                <el-input v-model="queryForm.keywords" placeholder="请输入角色名或角色编码"></el-input>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
-                <el-button type="success" icon="el-icon-plus" @click="handleAdd">添加</el-button>
-            </el-form-item>
-        </el-form>
-        <el-table
-                :data="tableData.data"
-                border
-                style="width: 100%">
-            <el-table-column
-                    prop="name"
-                    label="告警组名">
-            </el-table-column>
-            <el-table-column
-                    label="告警组成员"
-                    width="180">
-                <template #default="scope">
-                    <span style="margin-left: 6px" v-for="item in scope.row.users" :key="item">{{ item }}</span>
-                </template>
-            </el-table-column>
-            <el-table-column
-                    prop="updateUser"
-                    label="编辑人">
-            </el-table-column>
-            <el-table-column
-                    prop="updateTime"
-                    label="编辑时间">
-            </el-table-column>
-            <el-table-column label="操作">
-                <template #default="scope">
-                    <el-button
-                            size="mini"
-                            type="primary"
-                            @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                    <el-button
-                            size="mini"
-                            type="danger"
-                            @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-        <el-pagination
-                background
-                layout="prev, pager, next"
-                :total=tableData.total>
-        </el-pagination>
-        <el-dialog
-                title="提示"
-                v-model="dialogVisible"
-                @open="openDialog"
-                width="60%">
-            <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-width="100px" size="medium">
-                <el-form-item label="告警组名" prop="name">
-                    <el-input v-model="dialogForm.name"></el-input>
-                </el-form-item>
-                <el-form-item label="告警组成员">
-                    <el-transfer
-                            v-model="dialogForm.users"
-                            filterable
-                            :filter-method="filterMethod"
-                            filter-placeholder="请输入联系人姓名"
-                            :titles="transferTitles"
-                            :data="transferData"/>
-                </el-form-item>
-            </el-form>
-            <template #footer>
-            <span class="dialog-footer">
-              <el-button @click="dialogVisible = false">取 消</el-button>
-              <el-button type="primary" @click="onSubmit">确 定</el-button>
-            </span>
-            </template>
-        </el-dialog>
-    </div>
+  <div class="container">
+    <el-form :inline="true" :model="queryForm" class="demo-form-inline" size="medium">
+      <el-form-item label="关键字">
+        <el-input v-model="queryForm.keywords" placeholder="请输入角色名或角色编码"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
+        <el-button type="success" icon="el-icon-plus" @click="handleAdd">添加</el-button>
+      </el-form-item>
+    </el-form>
+    <el-table
+      :data="tableData.data"
+      border
+      style="width: 100%">
+      <el-table-column
+        prop="name"
+        label="告警组名">
+      </el-table-column>
+      <el-table-column
+        label="告警组成员"
+        width="180">
+        <template #default="scope">
+          <span style="margin-left: 6px" v-for="item in scope.row.users" :key="item">{{ item }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="updateUser"
+        label="编辑人">
+      </el-table-column>
+      <el-table-column
+        prop="updateTime"
+        label="编辑时间">
+      </el-table-column>
+      <el-table-column label="操作">
+        <template #default="scope">
+          <el-button
+            size="mini"
+            type="primary"
+            @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+          <el-button
+            size="mini"
+            type="danger"
+            @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-pagination
+      background
+      layout="prev, pager, next"
+      :total="tableData.total">
+    </el-pagination>
+    <el-dialog
+      title="提示"
+      v-model="dialogVisible"
+      @open="openDialog"
+      width="60%">
+      <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-width="100px" size="medium">
+        <el-form-item label="告警组名" prop="name">
+          <el-input v-model="dialogForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="告警组成员">
+          <el-transfer
+            v-model="dialogForm.users"
+            filterable
+            :filter-method="filterMethod"
+            filter-placeholder="请输入联系人姓名"
+            :titles="transferTitles"
+            :data="transferData"/>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="onSubmit">确 定</el-button>
+        </span>
+      </template>
+    </el-dialog>
+  </div>
 </template>
 
 <script>

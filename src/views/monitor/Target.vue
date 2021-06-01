@@ -163,7 +163,7 @@
 </template>
 
 <script>
-    import { getTargetPage, addTarget, deleteTarget } from "../../api/monitor/target";
+    import { getTargetPage, addTarget, editTarget, deleteTarget } from "../../api/monitor/target";
     import { getClusterList } from "../../api/monitor/cluster";
     import { getComponentList } from "../../api/monitor/component";
     import { getGroupList } from "../../api/alarm/group";
@@ -254,6 +254,10 @@
             async handleEdit(index, row) {
                 this.dialogTitle = "编辑集群"
                 this.dialogForm = row
+                this.dialogForm.alarmGroupIds = []
+                row.alarmGroupList.forEach((item,index) => {
+                  this.dialogForm.alarmGroupIds.push(item.alarmGroupId)
+                })
                 this.dialogVisible = true
             },
             openDialog(){
@@ -279,7 +283,9 @@
                                 this.successFn(data)
                             });
                         }else{
-                            this.successFn(data)
+                            editTarget(this.dialogForm.id, this.dialogForm).then(data => {
+                                this.successFn(data)
+                            });
                         }
                     } else {
                         console.log('error submit!!');

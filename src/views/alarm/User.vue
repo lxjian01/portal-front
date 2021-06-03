@@ -54,9 +54,13 @@
       </el-table-column>
     </el-table>
     <el-pagination
-      background
-      layout="prev, pager, next"
-      :total="tableData.total">
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="queryForm.pageIndex"
+            :page-size="queryForm.pageSize"
+            :page-sizes="[10, 20, 30, 40, 50, 100]"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="tableData.total">
     </el-pagination>
     <el-dialog
       title="提示"
@@ -122,6 +126,14 @@
                     this.tableData = data
                 });
             },
+          handleSizeChange(val) {
+            this.queryForm.pageSize = val
+            this.page()
+          },
+          handleCurrentChange(val) {
+            this.queryForm.pageIndex = val
+            this.page()
+          },
             dialogFormReset(){
                 this.dialogForm = {
                     id: 0,

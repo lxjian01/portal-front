@@ -95,9 +95,13 @@
       </el-table-column>
     </el-table>
     <el-pagination
-      background
-      layout="prev, pager, next"
-      :total="tableData.total">
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="queryForm.pageIndex"
+            :page-size="queryForm.pageSize"
+            :page-sizes="[10, 20, 30, 40, 50, 100]"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="tableData.total">
     </el-pagination>
     <el-dialog
       title="提示"
@@ -209,29 +213,37 @@
         },
         created() {
             this.page()
+          this.monitorClusterList = []
+          this.monitorClusterQueryList = [{id: 0, name: "全部"}]
+          getClusterList().then(data => {
+            this.monitorClusterList.push(...data)
+            this.monitorClusterQueryList.push(...data)
+          });
+          this.monitorComponentList = []
+          this.monitorComponentQueryList = [{id: 0, name: "全部"}]
+          getComponentList().then(data => {
+            this.monitorComponentList.push(...data)
+            this.monitorComponentQueryList.push(...data)
+          });
+          this.alarmGroupList = []
+          getGroupList().then(data => {
+            this.alarmGroupList.push(...data)
+          });
         },
         methods: {
             async page() {
-                this.monitorClusterList = []
-                this.monitorClusterQueryList = [{id: 0, name: "全部"}]
-                getClusterList().then(data => {
-                    this.monitorClusterList.push(...data)
-                    this.monitorClusterQueryList.push(...data)
-                });
-                this.monitorComponentList = []
-                this.monitorComponentQueryList = [{id: 0, name: "全部"}]
-                getComponentList().then(data => {
-                    this.monitorComponentList.push(...data)
-                    this.monitorComponentQueryList.push(...data)
-                });
-                this.alarmGroupList = []
-                getGroupList().then(data => {
-                    this.alarmGroupList.push(...data)
-                });
                 getTargetPage(this.queryForm).then(data => {
                     this.tableData = data
                 });
             },
+          handleSizeChange(val) {
+            this.queryForm.pageSize = val
+            this.page()
+          },
+          handleCurrentChange(val) {
+            this.queryForm.pageIndex = val
+            this.page()
+          },
             dialogFormReset(){
                 this.dialogForm = {
                     id: 0,

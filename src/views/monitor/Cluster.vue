@@ -22,8 +22,8 @@
         label="编码">
       </el-table-column>
       <el-table-column
-        prop="prometheusUrl"
-        label="prometheus url">
+              prop="remark"
+              label="备注">
       </el-table-column>
       <el-table-column
         prop="updateUser"
@@ -48,9 +48,13 @@
       </el-table-column>
     </el-table>
     <el-pagination
-      background
-      layout="prev, pager, next"
-      :total="tableData.total">
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="queryForm.pageIndex"
+            :page-size="queryForm.pageSize"
+            :page-sizes="[10, 20, 30, 40, 50, 100]"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="tableData.total">
     </el-pagination>
     <el-dialog
       title="提示"
@@ -64,8 +68,8 @@
         <el-form-item label="编码" prop="code">
           <el-input v-model="dialogForm.code"></el-input>
         </el-form-item>
-        <el-form-item label="prometheus url" prop="prometheusUrl">
-          <el-input v-model="dialogForm.prometheusUrl"></el-input>
+        <el-form-item label="备注">
+          <el-input v-model="dialogForm.remark"></el-input>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -99,9 +103,6 @@
                     name: [
                         {required: true, message: '请输入名称', trigger: 'blur'},
                     ],
-                    prometheusUrl: [
-                        {required: true, message: '请输入prometheus url', trigger: 'blur'},
-                    ],
                 },
                 dialogTitle: "",
                 dialogVisible: false,
@@ -116,12 +117,20 @@
                     this.tableData = data
                 });
             },
+          handleSizeChange(val) {
+            this.queryForm.pageSize = val
+            this.page()
+          },
+          handleCurrentChange(val) {
+            this.queryForm.pageIndex = val
+            this.page()
+          },
             dialogFormReset(){
                 this.dialogForm = {
                     id: 0,
                     code: "",
                     name: "",
-                    prometheusUrl: "",
+                    remark: "",
                 }
             },
             handleAdd(){

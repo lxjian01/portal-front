@@ -174,7 +174,7 @@
             },
             handleEdit(index, row) {
                 this.dialogTitle = "编辑菜单"
-                this.dialogForm = row
+                this.dialogForm = {...row}
                 this.dialogVisible = true
             },
             openDialog(){

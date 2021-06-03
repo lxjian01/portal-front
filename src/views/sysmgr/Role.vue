@@ -134,7 +134,7 @@
             },
             handleEdit(index, row) {
                 this.dialogTitle = "编辑角色"
-                this.dialogForm = row
+              this.dialogForm = {...row}
                 this.dialogVisible = true
             },
             openDialog(){

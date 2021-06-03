@@ -1,18 +1,8 @@
 <template>
     <div class="container">
         <el-form :inline="true" :model="queryForm" class="demo-form-inline" size="medium">
-            <el-form-item label="集群">
-                <el-select v-model="queryForm.monitorClusterId" placeholder="请选择">
-                    <el-option
-                            v-for="item in monitorClusterQueryList"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="item.id">
-                    </el-option>
-                </el-select>
-            </el-form-item>
             <el-form-item label="关键字">
-                <el-input v-model="queryForm.keyworkds" style="width: 300px;" placeholder="请输入名称、prometheus url"></el-input>
+                <el-input v-model="queryForm.keyworkds" style="width: 300px;" placeholder="请输入名称"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
@@ -24,21 +14,8 @@
                 border
                 style="width: 100%">
             <el-table-column
-                    width="180"
-                    label="集群">
-                <template #default="scope">
-                    <span>名称：{{ scope.row.monitorClusterCode }}</span>
-                    <br>
-                    <span>编码：{{ scope.row.monitorClusterName }}</span>
-                </template>
-            </el-table-column>
-            <el-table-column
                     prop="name"
                     label="名称">
-            </el-table-column>
-            <el-table-column
-                    prop="prometheusUrl"
-                    label="prometheus url">
             </el-table-column>
             <el-table-column
                     prop="remark"
@@ -81,21 +58,8 @@
                 @open="openDialog"
                 width="60%">
             <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-width="130px" size="medium">
-                <el-form-item label="集群" prop="monitorClusterId">
-                    <el-select v-model="dialogForm.monitorClusterId" placeholder="请选择">
-                        <el-option
-                                v-for="item in monitorClusterList"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item.id">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
                 <el-form-item label="名称" prop="name">
                     <el-input v-model="dialogForm.name"></el-input>
-                </el-form-item>
-                <el-form-item label="prometheus url" prop="prometheusUrl">
-                    <el-input v-model="dialogForm.prometheusUrl"></el-input>
                 </el-form-item>
                 <el-form-item label="备注">
                     <el-input v-model="dialogForm.remark"></el-input>
@@ -112,29 +76,22 @@
 </template>
 
 <script>
-    import { getPrometheusPage, addPrometheus, editPrometheus, deletePrometheus } from "../../api/monitor/prometheus";
-    import {getClusterList} from "../../api/monitor/cluster";
+    import { getExporterPage, addExporter, editExporter, deleteExporter } from "../../api/monitor/exporter";
 
     export default {
-        name: 'Prometheus',
+        name: 'Exporter',
         data() {
             return {
                 queryForm: {
-                    monitorClusterId: 0,
                     keyworkds: "",
                     pageIndex: 1,
                     pageSize: 10
                 },
-                monitorClusterList:[],
-                monitorClusterQueryList: [],
                 tableData: {},
                 dialogForm: {},
                 dialogFormRules: {
                     name: [
                         {required: true, message: '请输入名称', trigger: 'blur'},
-                    ],
-                    prometheusUrl: [
-                        {required: true, message: '请输入prometheus url', trigger: 'blur'},
                     ],
                 },
                 dialogTitle: "",
@@ -143,16 +100,10 @@
         },
         created() {
             this.page()
-            this.monitorClusterList = []
-            this.monitorClusterQueryList = [{id: 0, name: "全部"}]
-            getClusterList().then(data => {
-                this.monitorClusterList.push(...data)
-                this.monitorClusterQueryList.push(...data)
-            });
         },
         methods: {
             async page() {
-                getPrometheusPage(this.queryForm).then(data => {
+                getExporterPage(this.queryForm).then(data => {
                     this.tableData = data
                 });
             },
@@ -167,22 +118,21 @@
             dialogFormReset(){
                 this.dialogForm = {
                     id: 0,
-                    monitorClusterId: 0,
+                    code: "",
                     name: "",
-                    prometheusUrl: "",
                     remark: "",
                 }
             },
             handleAdd(){
                 this.dialogFormReset()
                 this.dialogVisible = true
-                this.dialogTitle = "添加Prometheus"
+                this.dialogTitle = "添加Exporter"
             },
             handleSearch() {
                 this.page()
             },
             async handleEdit(index, row) {
-                this.dialogTitle = "编辑Prometheus"
+                this.dialogTitle = "编辑Exporter"
                 this.dialogForm = {...row}
                 this.dialogVisible = true
             },
@@ -191,7 +141,7 @@
             },
             async handleDelete(_, row) {
                 const fn = async () => {
-                    await deletePrometheus(row.id)
+                    await deleteExporter(row.id)
                     this.successFn(null)
                 }
                 this.$delConfirm(fn)
@@ -205,11 +155,11 @@
                 this.$refs["dialogForm"].validate((valid) => {
                     if (valid) {
                         if(this.dialogForm.id === 0){
-                            addPrometheus(this.dialogForm).then(data => {
+                            addExporter(this.dialogForm).then(data => {
                                 this.successFn(data)
                             });
                         }else{
-                            editPrometheus(this.dialogForm.id, this.dialogForm).then(data => {
+                            editExporter(this.dialogForm.id, this.dialogForm).then(data => {
                                 this.successFn(data)
                             });
                         }

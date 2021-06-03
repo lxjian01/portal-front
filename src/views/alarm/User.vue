@@ -153,7 +153,7 @@
             },
             async handleEdit(index, row) {
                 this.dialogTitle = "编辑用户"
-                this.dialogForm = row
+              this.dialogForm = {...row}
                 this.dialogVisible = true
             },
             openDialog(){

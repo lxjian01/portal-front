@@ -143,7 +143,7 @@
             },
             async handleEdit(index, row) {
                 this.dialogTitle = "编辑集群"
-                this.dialogForm = row
+              this.dialogForm = {...row}
                 this.dialogVisible = true
             },
             openDialog(){

@@ -11,10 +11,10 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="组件" prop="monitorComponentId">
-        <el-select v-model="queryForm.monitorComponentId" placeholder="请选择">
+      <el-form-item label="资源" prop="monitorResourceId">
+        <el-select v-model="queryForm.monitorResourceId" placeholder="请选择">
           <el-option
-            v-for="item in monitorComponentQueryList"
+            v-for="item in monitorResourceQueryList"
             :key="item.id"
             :label="item.name"
             :value="item.id">
@@ -42,11 +42,11 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="组件">
+        label="资源">
         <template #default="scope">
-          <span>名称：{{ scope.row.monitorComponentName }}</span>
+          <span>名称：{{ scope.row.monitorResourceName }}</span>
           <br>
-          <span>编码：{{ scope.row.monitorComponentCode }}</span>
+          <span>编码：{{ scope.row.monitorResourceCode }}</span>
           <br>
           <span>exporter：{{ scope.row.exporter }}</span>
         </template>
@@ -119,10 +119,10 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="组件" prop="monitorComponentId">
-          <el-select v-model="dialogForm.monitorComponentId" placeholder="请选择">
+        <el-form-item label="资源" prop="monitorResourceId">
+          <el-select v-model="dialogForm.monitorResourceId" placeholder="请选择">
             <el-option
-              v-for="item in monitorComponentList"
+              v-for="item in monitorResourceList"
               :key="item.id"
               :label="item.name"
               :value="item.id">
@@ -169,7 +169,7 @@
 <script>
     import { getTargetPage, addTarget, editTarget, deleteTarget } from "../../api/monitor/target";
     import { getClusterList } from "../../api/monitor/cluster";
-    import { getComponentList } from "../../api/monitor/component";
+    import { getResourceList } from "../../api/monitor/resource";
     import { getGroupList } from "../../api/alarm/group";
     export default {
         name: 'Target',
@@ -177,7 +177,7 @@
             return {
                 queryForm: {
                     monitorClusterId: 0,
-                    monitorComponentId: 0,
+                    monitorResourceId: 0,
                     keyworkds: "",
                     pageIndex: 1,
                     pageSize: 10
@@ -187,15 +187,15 @@
                 intervalList: ["5s","30s","1m","2m","3m","4m","5m"],
                 monitorClusterList:[],
                 monitorClusterQueryList: [],
-                monitorComponentList:[],
-                monitorComponentQueryList:[],
+                monitorResourceList:[],
+                monitorResourceQueryList:[],
                 alarmGroupList: [],
                 dialogFormRules: {
                     monitorClusterId: [
                         {required: true, message: '请选择集群', trigger: 'blur'},
                     ],
-                    monitorComponentId: [
-                        {required: true, message: '请选择组件', trigger: 'blur'},
+                    monitorResourceId: [
+                        {required: true, message: '请选择资源', trigger: 'blur'},
                     ],
                     name: [
                         {required: true, message: '请输入名称', trigger: 'blur'},
@@ -219,11 +219,11 @@
             this.monitorClusterList.push(...data)
             this.monitorClusterQueryList.push(...data)
           });
-          this.monitorComponentList = []
-          this.monitorComponentQueryList = [{id: 0, name: "全部"}]
-          getComponentList().then(data => {
-            this.monitorComponentList.push(...data)
-            this.monitorComponentQueryList.push(...data)
+          this.monitorResourceList = []
+          this.monitorResourceQueryList = [{id: 0, name: "全部"}]
+          getResourceList().then(data => {
+            this.monitorResourceList.push(...data)
+            this.monitorResourceQueryList.push(...data)
           });
           this.alarmGroupList = []
           getGroupList().then(data => {
@@ -249,7 +249,7 @@
                     id: 0,
                     alarmGroupIds: [],
                     monitorClusterId: null,
-                    monitorComponentId: null,
+                    monitorResourceId: null,
                     name: "",
                     url: "",
                     interval: "",

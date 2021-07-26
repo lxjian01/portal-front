@@ -25,13 +25,13 @@ export default [
         },
         component: () => import ("../../views/monitor/Exporter")
     }, {
-        path: "/monitor/component",
-        name: "/monitor/component",
+        path: "/monitor/resource",
+        name: "/monitor/resource",
         meta: {
             parentTitle: '监控配置',
-            title: '监控组件'
+            title: '监控资源'
         },
-        component: () => import ("../../views/monitor/Component")
+        component: () => import ("../../views/monitor/Resource")
     }, {
         path: "/monitor/target",
         name: "/monitor/target",

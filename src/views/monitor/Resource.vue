@@ -97,10 +97,10 @@
 </template>
 
 <script>
-    import { getComponentPage, addComponent, editComponent, deleteComponent } from "../../api/monitor/component";
+    import { getResourcePage, addResource, editResource, deleteResource } from "../../api/monitor/resource";
 
     export default {
-        name: 'Component',
+        name: 'Resource',
         data() {
             return {
                 queryForm: {
@@ -130,7 +130,7 @@
         },
         methods: {
             async page() {
-                getComponentPage(this.queryForm).then(data => {
+                getResourcePage(this.queryForm).then(data => {
                     this.tableData = data
                 });
             },
@@ -170,7 +170,7 @@
             },
             async handleDelete(_, row) {
                 const fn = async () => {
-                    await deleteComponent(row.id)
+                    await deleteResource(row.id)
                     this.successFn(null)
                 }
                 this.$delConfirm(fn)
@@ -184,11 +184,11 @@
                 this.$refs["dialogForm"].validate((valid) => {
                     if (valid) {
                         if(this.dialogForm.id === 0){
-                            addComponent(this.dialogForm).then(data => {
+                            addResource(this.dialogForm).then(data => {
                                 this.successFn(data)
                             });
                         }else{
-                            editComponent(this.dialogForm.id, this.dialogForm).then(data => {
+                            editResource(this.dialogForm.id, this.dialogForm).then(data => {
                                 this.successFn(data)
                             });
                         }

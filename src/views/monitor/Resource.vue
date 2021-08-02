@@ -15,11 +15,11 @@
       style="width: 100%">
       <el-table-column
         prop="name"
-        label="名称">
+        label="资源名称">
       </el-table-column>
       <el-table-column
         prop="code"
-        label="编码">
+        label="资源编码">
       </el-table-column>
       <el-table-column
         prop="exporter"
@@ -65,15 +65,15 @@
             :total="tableData.total">
     </el-pagination>
     <el-dialog
-      title="提示"
+      title="监控资源"
       v-model="dialogVisible"
       @open="openDialog"
       width="60%">
       <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-width="130px" size="medium">
-        <el-form-item label="名称" prop="name">
+        <el-form-item label="资源名称" prop="name">
           <el-input v-model="dialogForm.name" placeholder="请输入名称"></el-input>
         </el-form-item>
-        <el-form-item label="编码" prop="code">
+        <el-form-item label="资源编码" prop="code">
           <el-input v-model="dialogForm.code" placeholder="eg：computer、mysql、kafka"></el-input>
         </el-form-item>
         <el-form-item label="exporter" prop="exporter">

@@ -63,7 +63,7 @@
             :total="tableData.total">
     </el-pagination>
     <el-dialog
-      title="提示"
+      title="告警联系人"
       v-model="dialogVisible"
       @open="openDialog"
       width="60%">

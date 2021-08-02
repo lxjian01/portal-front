@@ -22,8 +22,12 @@
         label="编码">
       </el-table-column>
       <el-table-column
-              prop="remark"
-              label="备注">
+        prop="prometheusUrl"
+        label="prometheus url">
+      </el-table-column>
+      <el-table-column
+        prop="remark"
+        label="备注">
       </el-table-column>
       <el-table-column
         prop="updateUser"
@@ -57,7 +61,7 @@
             :total="tableData.total">
     </el-pagination>
     <el-dialog
-      title="提示"
+      title="集群管理"
       v-model="dialogVisible"
       @open="openDialog"
       width="60%">
@@ -67,6 +71,9 @@
         </el-form-item>
         <el-form-item label="编码" prop="code">
           <el-input v-model="dialogForm.code"></el-input>
+        </el-form-item>
+        <el-form-item label="prometheus url" prop="prometheusUrl">
+          <el-input v-model="dialogForm.prometheusUrl"></el-input>
         </el-form-item>
         <el-form-item label="备注">
           <el-input v-model="dialogForm.remark"></el-input>
@@ -103,6 +110,9 @@
                     name: [
                         {required: true, message: '请输入名称', trigger: 'blur'},
                     ],
+                    prometheusUrl: [
+                      {required: true, message: '请输入prometheus url', trigger: 'blur'},
+                    ],
                 },
                 dialogTitle: "",
                 dialogVisible: false,
@@ -130,6 +140,7 @@
                     id: 0,
                     code: "",
                     name: "",
+                    prometheusUrl: "",
                     remark: "",
                 }
             },

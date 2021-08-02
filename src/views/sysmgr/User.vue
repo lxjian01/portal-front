@@ -60,7 +60,7 @@
             :total="tableData.total">
     </el-pagination>
     <el-dialog
-      title="提示"
+      title="用户管理"
       v-model="dialogVisible"
       @open="openDialog"
       width="60%">

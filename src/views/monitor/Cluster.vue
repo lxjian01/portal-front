@@ -22,10 +22,6 @@
         label="编码">
       </el-table-column>
       <el-table-column
-        prop="prometheusUrl"
-        label="prometheus url">
-      </el-table-column>
-      <el-table-column
         prop="remark"
         label="备注">
       </el-table-column>
@@ -72,9 +68,6 @@
         <el-form-item label="编码" prop="code">
           <el-input v-model="dialogForm.code"></el-input>
         </el-form-item>
-        <el-form-item label="prometheus url" prop="prometheusUrl">
-          <el-input v-model="dialogForm.prometheusUrl"></el-input>
-        </el-form-item>
         <el-form-item label="备注">
           <el-input v-model="dialogForm.remark"></el-input>
         </el-form-item>
@@ -110,9 +103,6 @@
                     name: [
                         {required: true, message: '请输入名称', trigger: 'blur'},
                     ],
-                    prometheusUrl: [
-                      {required: true, message: '请输入prometheus url', trigger: 'blur'},
-                    ],
                 },
                 dialogTitle: "",
                 dialogVisible: false,
@@ -140,7 +130,6 @@
                     id: 0,
                     code: "",
                     name: "",
-                    prometheusUrl: "",
                     remark: "",
                 }
             },

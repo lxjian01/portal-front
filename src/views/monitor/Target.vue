@@ -11,6 +11,16 @@
           </el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="prometheus" prop="prometheusId">
+        <el-select v-model="queryForm.prometheusId" placeholder="请选择">
+          <el-option
+                  v-for="item in prometheusQueryList"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id">
+          </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="资源" prop="monitorResourceId">
         <el-select v-model="queryForm.monitorResourceId" placeholder="请选择">
           <el-option
@@ -22,7 +32,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="关键字">
-        <el-input v-model="queryForm.keyworkds" style="width: 300px;" placeholder="请输入编码、名称、prometheus url"></el-input>
+        <el-input v-model="queryForm.keyworkds" style="width: 300px;" placeholder="请输入名称、目标地址"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
@@ -39,6 +49,14 @@
           <span>名称：{{ scope.row.monitorClusterCode }}</span>
           <br>
           <span>编码：{{ scope.row.monitorClusterName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+              label="prometheus">
+        <template #default="scope">
+          <span>名称：{{ scope.row.prometheusName }}</span>
+          <br>
+          <span>地址：{{ scope.row.prometheusUrl }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -177,6 +195,7 @@
             return {
                 queryForm: {
                     monitorClusterId: 0,
+                    prometheusId: 0,
                     monitorResourceId: 0,
                     keyworkds: "",
                     pageIndex: 1,
@@ -187,6 +206,8 @@
                 intervalList: ["5s","30s","1m","2m","3m","4m","5m"],
                 monitorClusterList:[],
                 monitorClusterQueryList: [],
+                prometheusList:[],
+                prometheusQueryList: [],
                 monitorResourceList:[],
                 monitorResourceQueryList:[],
                 alarmGroupList: [],
@@ -212,7 +233,7 @@
             };
         },
         created() {
-            this.page()
+          this.page()
           this.monitorClusterList = []
           this.monitorClusterQueryList = [{id: 0, name: "全部"}]
           getClusterList().then(data => {

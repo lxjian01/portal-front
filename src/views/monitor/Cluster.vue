@@ -2,7 +2,7 @@
   <div class="container">
     <el-form :inline="true" :model="queryForm" class="demo-form-inline" size="medium">
       <el-form-item label="关键字">
-        <el-input v-model="queryForm.keyworkds" style="width: 300px;" placeholder="请输入编码、名称、prometheus url"></el-input>
+        <el-input v-model="queryForm.keywords" style="width: 300px;" placeholder="请输入编码、名称、prometheus url"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
@@ -90,7 +90,7 @@
         data() {
             return {
                 queryForm: {
-                    keyworkds: "",
+                    keywords: "",
                     pageIndex: 1,
                     pageSize: 10
                 },

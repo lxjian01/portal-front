@@ -32,7 +32,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="关键字">
-        <el-input v-model="queryForm.keyworkds" style="width: 300px;" placeholder="请输入名称、目标地址"></el-input>
+        <el-input v-model="queryForm.keywords" style="width: 300px;" placeholder="请输入名称、目标地址"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
@@ -187,6 +187,7 @@
 <script>
     import { getTargetPage, addTarget, editTarget, deleteTarget } from "../../api/monitor/target";
     import { getClusterList } from "../../api/monitor/cluster";
+    import { getPrometheusList } from "../../api/monitor/prometheus";
     import { getResourceList } from "../../api/monitor/resource";
     import { getGroupList } from "../../api/alarm/group";
     export default {
@@ -197,7 +198,7 @@
                     monitorClusterId: 0,
                     prometheusId: 0,
                     monitorResourceId: 0,
-                    keyworkds: "",
+                    keywords: "",
                     pageIndex: 1,
                     pageSize: 10
                 },

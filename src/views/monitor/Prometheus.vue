@@ -24,6 +24,14 @@
                 border
                 style="width: 100%">
             <el-table-column
+                    label="集群">
+                <template #default="scope">
+                    <span>名称：{{ scope.row.monitorClusterCode }}</span>
+                    <br>
+                    <span>编码：{{ scope.row.monitorClusterName }}</span>
+                </template>
+            </el-table-column>
+            <el-table-column
                     prop="name"
                     label="名称">
             </el-table-column>
@@ -72,6 +80,16 @@
                 @open="openDialog"
                 width="60%">
             <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-width="130px" size="medium">
+                <el-form-item label="集群" prop="monitorClusterId">
+                    <el-select v-model="dialogForm.monitorClusterId" placeholder="请选择">
+                        <el-option
+                                v-for="item in monitorClusterList"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
                 <el-form-item label="名称" prop="name">
                     <el-input v-model="dialogForm.name"></el-input>
                 </el-form-item>
@@ -110,6 +128,9 @@
                 monitorClusterList:[],
                 monitorClusterQueryList: [],
                 dialogFormRules: {
+                    monitorClusterId: [
+                        {required: true, message: '请选择集群', trigger: 'blur'},
+                    ],
                     url: [
                         {required: true, message: '请输入地址', trigger: 'blur'},
                     ],
@@ -147,6 +168,7 @@
             dialogFormReset(){
                 this.dialogForm = {
                     id: 0,
+                    monitorClusterId: null,
                     name: "",
                     url: "",
                     remark: "",

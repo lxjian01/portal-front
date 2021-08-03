@@ -57,11 +57,13 @@
                     <el-button
                             size="mini"
                             type="primary"
-                            @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                            @click="handleEdit(scope.$index, scope.row)">编辑
+                    </el-button>
                     <el-button
                             size="mini"
                             type="danger"
-                            @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                            @click="handleDelete(scope.$index, scope.row)">删除
+                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -75,7 +77,7 @@
                 :total="tableData.total">
         </el-pagination>
         <el-dialog
-                title="Prometheus"
+                :title="this.dialogTitle"
                 v-model="dialogVisible"
                 @open="openDialog"
                 width="60%">
@@ -111,7 +113,7 @@
 </template>
 
 <script>
-    import { getPrometheusPage, addPrometheus, editPrometheus, deletePrometheus } from "../../api/monitor/prometheus";
+    import {getPrometheusPage, addPrometheus, editPrometheus, deletePrometheus} from "../../api/monitor/prometheus";
     import {getClusterList} from "../../api/monitor/cluster";
 
     export default {
@@ -125,7 +127,7 @@
                 },
                 tableData: {},
                 dialogForm: {},
-                monitorClusterList:[],
+                monitorClusterList: [],
                 monitorClusterQueryList: [],
                 dialogFormRules: {
                     monitorClusterId: [
@@ -165,7 +167,7 @@
                 this.queryForm.pageIndex = val
                 this.page()
             },
-            dialogFormReset(){
+            dialogFormReset() {
                 this.dialogForm = {
                     id: 0,
                     monitorClusterId: null,
@@ -174,20 +176,21 @@
                     remark: "",
                 }
             },
-            handleAdd(){
+            handleAdd() {
+                this.dialogTitle = "Prometheus - 添加"
                 this.dialogFormReset()
                 this.dialogVisible = true
-                this.dialogTitle = "添加集群"
             },
             handleSearch() {
                 this.page()
             },
             async handleEdit(index, row) {
-                this.dialogTitle = "编辑集群"
+                this.dialogTitle = "Prometheus - 编辑"
+                this.dialogFormReset()
                 this.dialogForm = {...row}
                 this.dialogVisible = true
             },
-            openDialog(){
+            openDialog() {
 
             },
             async handleDelete(_, row) {
@@ -197,7 +200,7 @@
                 }
                 this.$delConfirm(fn)
             },
-            successFn(data){
+            successFn(data) {
                 this.page()
                 this.$message.success('操作成功')
                 this.dialogVisible = false
@@ -205,11 +208,11 @@
             onSubmit() {
                 this.$refs["dialogForm"].validate((valid) => {
                     if (valid) {
-                        if(this.dialogForm.id === 0){
+                        if (this.dialogForm.id === 0) {
                             addPrometheus(this.dialogForm).then(data => {
                                 this.successFn(data)
                             });
-                        }else{
+                        } else {
                             editPrometheus(this.dialogForm.id, this.dialogForm).then(data => {
                                 this.successFn(data)
                             });

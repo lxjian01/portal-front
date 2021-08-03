@@ -1,81 +1,83 @@
 <template>
-  <div class="container">
-    <el-form :inline="true" :model="queryForm" class="demo-form-inline" size="medium">
-      <el-form-item label="关键字">
-        <el-input v-model="queryForm.keywords" placeholder="请输入角色名或角色编码"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
-        <el-button type="success" icon="el-icon-plus" @click="handleAdd">添加</el-button>
-      </el-form-item>
-    </el-form>
-    <el-table
-      :data="tableData.data"
-      border
-      style="width: 100%">
-      <el-table-column
-        prop="roleCode"
-        label="角色编码">
-      </el-table-column>
-      <el-table-column
-        prop="roleName"
-        label="角色名">
-      </el-table-column>
-      <el-table-column
-        prop="updateUser"
-        label="编辑人">
-      </el-table-column>
-      <el-table-column
-        prop="updateTime"
-        label="编辑时间">
-      </el-table-column>
-      <el-table-column label="操作">
-        <template #default="scope">
-          <el-button
-            size="mini"
-            type="primary"
-            @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-button
-            size="mini"
-            type="danger"
-            @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="queryForm.pageIndex"
-            :page-size="queryForm.pageSize"
-            :page-sizes="[10, 20, 30, 40, 50, 100]"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="tableData.total">
-    </el-pagination>
-    <el-dialog
-      title="角色管理"
-      v-model="dialogVisible"
-      @open="openDialog"
-      width="60%">
-      <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-width="80px" size="medium">
-        <el-form-item label="角色编码" prop="roleCode">
-          <el-input v-model="dialogForm.roleCode"></el-input>
-        </el-form-item>
-        <el-form-item label="角色名" prop="roleName">
-          <el-input v-model="dialogForm.roleName"></el-input>
-        </el-form-item>
-      </el-form>
-      <template #footer>
+    <div class="container">
+        <el-form :inline="true" :model="queryForm" class="demo-form-inline" size="medium">
+            <el-form-item label="关键字">
+                <el-input v-model="queryForm.keywords" placeholder="请输入角色名或角色编码"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
+                <el-button type="success" icon="el-icon-plus" @click="handleAdd">添加</el-button>
+            </el-form-item>
+        </el-form>
+        <el-table
+                :data="tableData.data"
+                border
+                style="width: 100%">
+            <el-table-column
+                    prop="roleCode"
+                    label="角色编码">
+            </el-table-column>
+            <el-table-column
+                    prop="roleName"
+                    label="角色名">
+            </el-table-column>
+            <el-table-column
+                    prop="updateUser"
+                    label="编辑人">
+            </el-table-column>
+            <el-table-column
+                    prop="updateTime"
+                    label="编辑时间">
+            </el-table-column>
+            <el-table-column label="操作">
+                <template #default="scope">
+                    <el-button
+                            size="mini"
+                            type="primary"
+                            @click="handleEdit(scope.$index, scope.row)">编辑
+                    </el-button>
+                    <el-button
+                            size="mini"
+                            type="danger"
+                            @click="handleDelete(scope.$index, scope.row)">删除
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="queryForm.pageIndex"
+                :page-size="queryForm.pageSize"
+                :page-sizes="[10, 20, 30, 40, 50, 100]"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="tableData.total">
+        </el-pagination>
+        <el-dialog
+                :title="this.dialogTitle"
+                v-model="dialogVisible"
+                @open="openDialog"
+                width="60%">
+            <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-width="80px" size="medium">
+                <el-form-item label="角色编码" prop="roleCode">
+                    <el-input v-model="dialogForm.roleCode"></el-input>
+                </el-form-item>
+                <el-form-item label="角色名" prop="roleName">
+                    <el-input v-model="dialogForm.roleName"></el-input>
+                </el-form-item>
+            </el-form>
+            <template #footer>
         <span class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
           <el-button type="primary" @click="onSubmit">确 定</el-button>
         </span>
-      </template>
-    </el-dialog>
-  </div>
+            </template>
+        </el-dialog>
+    </div>
 </template>
 
 <script>
-    import { getRolePage, addRole, editRole, deleteRole } from "../../api/sysmgr/role";
+    import {getRolePage, addRole, editRole, deleteRole} from "../../api/sysmgr/role";
 
     export default {
         name: 'Role',
@@ -109,35 +111,36 @@
                     this.tableData = data
                 });
             },
-          handleSizeChange(val) {
-            this.queryForm.pageSize = val
-            this.page()
-          },
-          handleCurrentChange(val) {
-            this.queryForm.pageIndex = val
-            this.page()
-          },
-            dialogFormReset(){
+            handleSizeChange(val) {
+                this.queryForm.pageSize = val
+                this.page()
+            },
+            handleCurrentChange(val) {
+                this.queryForm.pageIndex = val
+                this.page()
+            },
+            dialogFormReset() {
                 this.dialogForm = {
                     id: 0,
                     roleCode: "",
                     roleName: "",
                 }
             },
-            handleAdd(){
+            handleAdd() {
+                this.dialogTitle = "角色管理 - 添加"
                 this.dialogFormReset()
                 this.dialogVisible = true
-                this.dialogTitle = "添加角色"
             },
             handleSearch() {
                 this.page()
             },
             handleEdit(index, row) {
-                this.dialogTitle = "编辑角色"
-              this.dialogForm = {...row}
+                this.dialogTitle = "角色管理 - 编辑"
+                this.dialogFormReset()
+                this.dialogForm = {...row}
                 this.dialogVisible = true
             },
-            openDialog(){
+            openDialog() {
 
             },
             async handleDelete(_, row) {
@@ -147,7 +150,7 @@
                 }
                 this.$delConfirm(fn)
             },
-            successFn(data){
+            successFn(data) {
                 this.page()
                 this.$message.success('操作成功')
                 this.dialogVisible = false
@@ -155,11 +158,11 @@
             onSubmit() {
                 this.$refs["dialogForm"].validate((valid) => {
                     if (valid) {
-                        if(this.dialogForm.id === 0){
+                        if (this.dialogForm.id === 0) {
                             addRole(this.dialogForm).then(data => {
                                 this.successFn(data)
                             });
-                        }else{
+                        } else {
                             editRole(this.dialogForm.id, this.dialogForm).then(data => {
                                 this.successFn(data)
                             });

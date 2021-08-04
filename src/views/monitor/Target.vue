@@ -1,16 +1,6 @@
 <template>
     <div class="container">
         <el-form :inline="true" :model="queryForm" class="demo-form-inline" size="medium">
-            <el-form-item label="集群" prop="monitorClusterId">
-                <el-select v-model="queryForm.monitorClusterId" @change="monitorClusterQueryChange" placeholder="请选择">
-                    <el-option
-                            v-for="item in monitorClusterQueryList"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="item.id">
-                    </el-option>
-                </el-select>
-            </el-form-item>
             <el-form-item label="prometheus" prop="prometheusId">
                 <el-select v-model="queryForm.prometheusId" placeholder="请选择">
                     <el-option
@@ -43,14 +33,6 @@
                 :data="tableData.data"
                 border
                 style="width: 100%">
-            <el-table-column
-                    label="集群">
-                <template #default="scope">
-                    <span>名称：{{ scope.row.monitorClusterCode }}</span>
-                    <br>
-                    <span>编码：{{ scope.row.monitorClusterName }}</span>
-                </template>
-            </el-table-column>
             <el-table-column
                     label="prometheus">
                 <template #default="scope">
@@ -129,16 +111,6 @@
                 @open="openDialog"
                 width="60%">
             <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-width="130px" size="medium">
-                <el-form-item label="集群" prop="monitorClusterId">
-                    <el-select v-model="dialogForm.monitorClusterId" @change="monitorClusterChange" placeholder="请选择">
-                        <el-option
-                                v-for="item in monitorClusterList"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item.id">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
                 <el-form-item label="prometheus" prop="prometheusId">
                     <el-select v-model="dialogForm.prometheusId" placeholder="请选择">
                         <el-option
@@ -198,7 +170,6 @@
 
 <script>
     import {getTargetPage, addTarget, editTarget, deleteTarget} from "../../api/monitor/target";
-    import {getClusterList} from "../../api/monitor/cluster";
     import {getPrometheusList} from "../../api/monitor/prometheus";
     import {getResourceList} from "../../api/monitor/resource";
     import {getGroupList} from "../../api/alarm/group";
@@ -208,7 +179,6 @@
         data() {
             return {
                 queryForm: {
-                    monitorClusterId: 0,
                     prometheusId: 0,
                     monitorResourceId: 0,
                     keywords: "",
@@ -218,16 +188,14 @@
                 tableData: {},
                 dialogForm: {},
                 intervalList: ["5s", "30s", "1m", "2m", "3m", "4m", "5m"],
-                monitorClusterList: [],
-                monitorClusterQueryList: [],
                 prometheusList: [],
                 prometheusQueryList: [],
                 monitorResourceList: [],
                 monitorResourceQueryList: [],
                 alarmGroupList: [],
                 dialogFormRules: {
-                    monitorClusterId: [
-                        {required: true, message: '请选择集群', trigger: 'blur'},
+                    prometheusId: [
+                        {required: true, message: '请选择prometheus', trigger: 'blur'},
                     ],
                     monitorResourceId: [
                         {required: true, message: '请选择资源', trigger: 'blur'},
@@ -248,14 +216,12 @@
         },
         created() {
             this.page()
-            this.monitorClusterList = []
-            this.monitorClusterQueryList = [{id: 0, name: "全部"}]
-            getClusterList().then(data => {
-                this.monitorClusterList.push(...data)
-                this.monitorClusterQueryList.push(...data)
-            })
             this.prometheusList = []
             this.prometheusQueryList = [{id: 0, name: "全部"}]
+            getPrometheusList().then(data => {
+                this.prometheusList.push(...data)
+                this.prometheusQueryList.push(...data)
+            });
             this.monitorResourceList = []
             this.monitorResourceQueryList = [{id: 0, name: "全部"}]
             getResourceList().then(data => {
@@ -281,26 +247,10 @@
                 this.queryForm.pageIndex = val
                 this.page()
             },
-            monitorClusterQueryChange(val) {
-                this.prometheusQueryList = [{id: 0, name: "全部"}]
-                let params = {"monitorClusterId": val}
-                getPrometheusList(params).then(data => {
-                    this.prometheusQueryList.push(...data)
-                });
-            },
-            monitorClusterChange(val) {
-                this.prometheusList = []
-                this.dialogForm.prometheusId = null
-                let params = {"monitorClusterId": val}
-                getPrometheusList(params).then(data => {
-                    this.prometheusList.push(...data)
-                });
-            },
             dialogFormReset() {
                 this.dialogForm = {
                     id: 0,
                     alarmGroupIds: [],
-                    monitorClusterId: null,
                     prometheusId: null,
                     monitorResourceId: null,
                     name: "",
@@ -320,11 +270,6 @@
                 this.dialogTitle = "监控目标 - 编辑"
                 this.dialogFormReset()
                 this.dialogForm = {...row}
-                this.prometheusList = []
-                let params = {"monitorClusterId": row.monitorClusterId}
-                getPrometheusList(params).then(data => {
-                    this.prometheusList.push(...data)
-                });
 
                 this.dialogForm.alarmGroupIds = []
                 row.alarmGroupList.forEach((item, index) => {

@@ -1,16 +1,6 @@
 <template>
     <div class="container">
         <el-form :inline="true" :model="queryForm" class="demo-form-inline" size="medium">
-            <el-form-item label="集群" prop="monitorClusterId">
-                <el-select v-model="queryForm.monitorClusterId" placeholder="请选择">
-                    <el-option
-                            v-for="item in monitorClusterQueryList"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="item.id">
-                    </el-option>
-                </el-select>
-            </el-form-item>
             <el-form-item label="关键字">
                 <el-input v-model="queryForm.keywords" style="width: 300px;" placeholder="请输入名称、url"></el-input>
             </el-form-item>
@@ -24,12 +14,8 @@
                 border
                 style="width: 100%">
             <el-table-column
-                    label="集群">
-                <template #default="scope">
-                    <span>名称：{{ scope.row.monitorClusterCode }}</span>
-                    <br>
-                    <span>编码：{{ scope.row.monitorClusterName }}</span>
-                </template>
+                    prop="code"
+                    label="编码">
             </el-table-column>
             <el-table-column
                     prop="name"
@@ -82,15 +68,8 @@
                 @open="openDialog"
                 width="60%">
             <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-width="130px" size="medium">
-                <el-form-item label="集群" prop="monitorClusterId">
-                    <el-select v-model="dialogForm.monitorClusterId" placeholder="请选择">
-                        <el-option
-                                v-for="item in monitorClusterList"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item.id">
-                        </el-option>
-                    </el-select>
+                <el-form-item label="编码" prop="code">
+                    <el-input v-model="dialogForm.code"></el-input>
                 </el-form-item>
                 <el-form-item label="名称" prop="name">
                     <el-input v-model="dialogForm.name"></el-input>
@@ -114,8 +93,6 @@
 
 <script>
     import {getPrometheusPage, addPrometheus, editPrometheus, deletePrometheus} from "../../api/monitor/prometheus";
-    import {getClusterList} from "../../api/monitor/cluster";
-
     export default {
         name: 'Prometheus',
         data() {
@@ -127,17 +104,16 @@
                 },
                 tableData: {},
                 dialogForm: {},
-                monitorClusterList: [],
-                monitorClusterQueryList: [],
+
                 dialogFormRules: {
-                    monitorClusterId: [
-                        {required: true, message: '请选择集群', trigger: 'blur'},
-                    ],
-                    url: [
-                        {required: true, message: '请输入地址', trigger: 'blur'},
+                    code: [
+                        {required: true, message: '请输入编码', trigger: 'blur'},
                     ],
                     name: [
                         {required: true, message: '请输入名称', trigger: 'blur'},
+                    ],
+                    url: [
+                        {required: true, message: '请输入地址', trigger: 'blur'},
                     ],
                 },
                 dialogTitle: "",
@@ -146,12 +122,6 @@
         },
         created() {
             this.page()
-            this.monitorClusterList = []
-            this.monitorClusterQueryList = [{id: 0, name: "全部"}]
-            getClusterList().then(data => {
-                this.monitorClusterList.push(...data)
-                this.monitorClusterQueryList.push(...data)
-            });
         },
         methods: {
             async page() {
@@ -170,7 +140,7 @@
             dialogFormReset() {
                 this.dialogForm = {
                     id: 0,
-                    monitorClusterId: null,
+                    code: "",
                     name: "",
                     url: "",
                     remark: "",

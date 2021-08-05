@@ -37,7 +37,7 @@
                     label="排序">
             </el-table-column>
             <el-table-column
-                    width="90"
+                    width="80"
                     prop="updateUser"
                     label="编辑人">
             </el-table-column>

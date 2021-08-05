@@ -34,6 +34,7 @@
                     label="备注">
             </el-table-column>
             <el-table-column
+                    width="80"
                     prop="updateUser"
                     label="编辑人">
             </el-table-column>

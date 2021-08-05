@@ -1,16 +1,6 @@
 <template>
     <div class="container">
         <el-form :inline="true" :model="queryForm" class="demo-form-inline" size="medium">
-            <el-form-item label="prometheus" prop="prometheusId">
-                <el-select v-model="queryForm.prometheusId" placeholder="请选择">
-                    <el-option
-                            v-for="item in prometheusQueryList"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="item.id">
-                    </el-option>
-                </el-select>
-            </el-form-item>
             <el-form-item label="关键字">
                 <el-input v-model="queryForm.keywords" style="width: 300px;" placeholder="请输入名称、record、expr"></el-input>
             </el-form-item>
@@ -36,6 +26,16 @@
                     label="表达式">
             </el-table-column>
             <el-table-column
+                    label="Prometheus">
+                <template #default="scope">
+                    <div v-for="(item,index) in scope.row.prometheusList" :key="index">
+                        <span>{{ item.prometheusName }}</span>
+                        <br>
+                    </div>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    width="80"
                     prop="updateUser"
                     label="编辑人">
             </el-table-column>
@@ -113,7 +113,6 @@
         data() {
             return {
                 queryForm: {
-                    prometheusId: 0,
                     keywords: "",
                     pageIndex: 1,
                     pageSize: 10
@@ -121,7 +120,6 @@
                 tableData: {},
                 dialogForm: {},
                 prometheusList: [],
-                prometheusQueryList: [],
                 dialogFormRules: {
                     name: [
                         {required: true, message: '请输入名称', trigger: 'blur'},
@@ -140,15 +138,14 @@
         created() {
             this.page()
             this.prometheusList = []
-            this.prometheusQueryList = [{id: 0, name: "全部"}]
             getPrometheusList().then(data => {
                 this.prometheusList.push(...data)
-                this.prometheusQueryList.push(...data)
             });
         },
         methods: {
             async page() {
                 getRecordingRulePage(this.queryForm).then(data => {
+                    console.info(data)
                     this.tableData = data
                 });
             },

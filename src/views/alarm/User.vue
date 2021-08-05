@@ -2,7 +2,7 @@
     <div class="container">
         <el-form :inline="true" :model="queryForm" class="demo-form-inline" size="medium">
             <el-form-item label="姓名">
-                <el-input v-model="queryForm.userName" placeholder="请输入姓名"></el-input>
+                <el-input v-model="queryForm.name" placeholder="请输入姓名"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
@@ -14,7 +14,7 @@
                 border
                 style="width: 100%">
             <el-table-column
-                    prop="userName"
+                    prop="name"
                     label="姓名">
             </el-table-column>
             <el-table-column
@@ -70,8 +70,8 @@
                 @open="openDialog"
                 width="60%">
             <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-width="80px" size="medium">
-                <el-form-item label="姓名" prop="userName">
-                    <el-input v-model="dialogForm.userName"></el-input>
+                <el-form-item label="姓名" prop="name">
+                    <el-input v-model="dialogForm.name"></el-input>
                 </el-form-item>
                 <el-form-item label="电话">
                     <el-input v-model="dialogForm.phone"></el-input>
@@ -101,14 +101,14 @@
         data() {
             return {
                 queryForm: {
-                    userName: "",
+                    name: "",
                     pageIndex: 1,
                     pageSize: 10
                 },
                 tableData: {},
                 dialogForm: {},
                 dialogFormRules: {
-                    userName: [
+                    name: [
                         {required: true, message: '请输入姓名', trigger: 'blur'},
                     ],
                     email: [
@@ -139,7 +139,7 @@
             dialogFormReset() {
                 this.dialogForm = {
                     id: 0,
-                    userName: "",
+                    name: "",
                     phone: "",
                     email: "",
                     weixin: "",

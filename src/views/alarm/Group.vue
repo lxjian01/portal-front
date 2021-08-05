@@ -127,7 +127,7 @@
             this.transferData = []
             getUserList().then(data => {
                 data.forEach((user, index) => {
-                    this.transferData.push({key: user.id, label: user.userName});
+                    this.transferData.push({key: user.id, label: user.name});
                 });
             });
         },

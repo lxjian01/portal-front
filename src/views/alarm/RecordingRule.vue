@@ -24,20 +24,16 @@
                 border
                 style="width: 100%">
             <el-table-column
-                    prop="code"
-                    label="编码">
-            </el-table-column>
-            <el-table-column
                     prop="name"
                     label="名称">
             </el-table-column>
             <el-table-column
-                    prop="url"
-                    label="地址">
+                    prop="record"
+                    label="编码">
             </el-table-column>
             <el-table-column
-                    prop="remark"
-                    label="备注">
+                    prop="expr"
+                    label="表达式">
             </el-table-column>
             <el-table-column
                     prop="updateUser"
@@ -88,17 +84,14 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="编码" prop="code">
-                    <el-input v-model="dialogForm.code"></el-input>
-                </el-form-item>
                 <el-form-item label="名称" prop="name">
                     <el-input v-model="dialogForm.name"></el-input>
                 </el-form-item>
-                <el-form-item label="地址" prop="url">
-                    <el-input v-model="dialogForm.url"></el-input>
+                <el-form-item label="编码" prop="record">
+                    <el-input v-model="dialogForm.record"></el-input>
                 </el-form-item>
-                <el-form-item label="备注">
-                    <el-input v-model="dialogForm.remark"></el-input>
+                <el-form-item label="表达式" prop="expr">
+                    <el-input v-model="dialogForm.expr"></el-input>
                 </el-form-item>
             </el-form>
             <template #footer>
@@ -130,14 +123,14 @@
                 prometheusList: [],
                 prometheusQueryList: [],
                 dialogFormRules: {
-                    code: [
-                        {required: true, message: '请输入编码', trigger: 'blur'},
-                    ],
                     name: [
                         {required: true, message: '请输入名称', trigger: 'blur'},
                     ],
-                    url: [
-                        {required: true, message: '请输入地址', trigger: 'blur'},
+                    record: [
+                        {required: true, message: '请输入编码', trigger: 'blur'},
+                    ],
+                    expr: [
+                        {required: true, message: '请输入表达式', trigger: 'blur'},
                     ],
                 },
                 dialogTitle: "",
@@ -171,10 +164,9 @@
                 this.dialogForm = {
                     id: 0,
                     prometheusIds: [],
-                    code: "",
                     name: "",
-                    url: "",
-                    remark: "",
+                    record: "",
+                    expr: "",
                 }
             },
             handleAdd() {

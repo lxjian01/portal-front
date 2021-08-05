@@ -77,6 +77,11 @@
                     label="频率">
             </el-table-column>
             <el-table-column
+                    width="130"
+                    prop="remark"
+                    label="备注">
+            </el-table-column>
+            <el-table-column
                     width="160"
                     prop="updateTime"
                     label="编辑时间">
@@ -156,6 +161,9 @@
                                 :value="item">
                         </el-option>
                     </el-select>
+                </el-form-item>
+                <el-form-item label="备注" prop="remark">
+                    <el-input type="textarea" v-model="dialogForm.remark"></el-input>
                 </el-form-item>
             </el-form>
             <template #footer>

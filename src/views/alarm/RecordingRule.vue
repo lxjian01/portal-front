@@ -19,11 +19,11 @@
             </el-table-column>
             <el-table-column
                     prop="record"
-                    label="编码">
+                    label="编码（record）">
             </el-table-column>
             <el-table-column
                     prop="expr"
-                    label="表达式">
+                    label="表达式（expr）">
             </el-table-column>
             <el-table-column
                     label="Prometheus">
@@ -87,10 +87,10 @@
                 <el-form-item label="名称" prop="name">
                     <el-input v-model="dialogForm.name"></el-input>
                 </el-form-item>
-                <el-form-item label="编码" prop="record">
+                <el-form-item label="编码（record）" prop="record">
                     <el-input v-model="dialogForm.record" :disabled="disableRecord"></el-input>
                 </el-form-item>
-                <el-form-item label="表达式" prop="expr">
+                <el-form-item label="表达式（expr）" prop="expr">
                     <el-input v-model="dialogForm.expr"></el-input>
                 </el-form-item>
             </el-form>

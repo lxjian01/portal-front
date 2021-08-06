@@ -88,7 +88,7 @@
                     <el-input v-model="dialogForm.name"></el-input>
                 </el-form-item>
                 <el-form-item label="编码" prop="record">
-                    <el-input v-model="dialogForm.record"></el-input>
+                    <el-input v-model="dialogForm.record" :disabled="disableRecord"></el-input>
                 </el-form-item>
                 <el-form-item label="表达式" prop="expr">
                     <el-input v-model="dialogForm.expr"></el-input>
@@ -117,6 +117,7 @@
                     pageIndex: 1,
                     pageSize: 10
                 },
+                disableRecord: false,
                 tableData: {},
                 dialogForm: {},
                 prometheusList: [],
@@ -169,6 +170,7 @@
             handleAdd() {
                 this.dialogTitle = "Prometheus - 添加"
                 this.dialogFormReset()
+                this.disableRecord = false
                 this.dialogVisible = true
             },
             handleSearch() {
@@ -177,7 +179,12 @@
             async handleEdit(index, row) {
                 this.dialogTitle = "Prometheus - 编辑"
                 this.dialogFormReset()
+                this.disableRecord = true
                 this.dialogForm = {...row}
+                this.dialogForm.prometheusIds = []
+                row.prometheusList.forEach((item) => {
+                    this.dialogForm.prometheusIds.push(item.prometheusId)
+                });
                 this.dialogVisible = true
             },
             openDialog() {

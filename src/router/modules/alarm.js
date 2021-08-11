@@ -24,5 +24,13 @@ export default [
             title: 'Recording Rule'
         },
         component: () => import ("../../views/alarm/RecordingRule.vue")
+    }, {
+        path: "/alarm/alerting-metric",
+        name: "/alarm/alerting-metric",
+        meta: {
+            parentTitle: '告警配置',
+            title: '告警指标'
+        },
+        component: () => import ("../../views/alarm/AlertingMetric.vue")
     },
 ];

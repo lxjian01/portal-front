@@ -9,6 +9,14 @@ export default [
         },
         component: () => import ("../../views/monitor/Prometheus")
     }, {
+        path: "/monitor/exporter",
+        name: "/monitor/exporter",
+        meta: {
+            parentTitle: '监控配置',
+            title: 'Exporter'
+        },
+        component: () => import ("../../views/monitor/Exporter")
+    }, {
         path: "/monitor/resource",
         name: "/monitor/resource",
         meta: {

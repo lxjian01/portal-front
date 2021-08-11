@@ -1,18 +1,8 @@
 <template>
     <div class="container">
         <el-form :inline="true" :model="queryForm" class="demo-form-inline" size="medium">
-            <el-form-item label="exporter">
-                <el-select v-model="queryForm.exporter" placeholder="请选择">
-                    <el-option
-                            v-for="item in exporterQueryList"
-                            :key="item.exporter"
-                            :label="item.exporter"
-                            :value="item.exporter">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="资源">
-                <el-input v-model="queryForm.keywords" style="width: 300px;" placeholder="请输入资源编码、名称"></el-input>
+            <el-form-item label="关键字">
+                <el-input v-model="queryForm.keywords" style="width: 300px;" placeholder="请输入exporter、url"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
@@ -24,16 +14,12 @@
                 border
                 style="width: 100%">
             <el-table-column
-                    prop="name"
-                    label="资源名称">
-            </el-table-column>
-            <el-table-column
-                    prop="code"
-                    label="资源编码">
-            </el-table-column>
-            <el-table-column
                     prop="exporter"
                     label="exporter">
+            </el-table-column>
+            <el-table-column
+                    prop="gitUrl"
+                    label="git地址">
             </el-table-column>
             <el-table-column
                     prop="remark"
@@ -79,21 +65,11 @@
                 @open="openDialog"
                 width="60%">
             <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-width="130px" size="medium">
-                <el-form-item label="资源名称" prop="name">
-                    <el-input v-model="dialogForm.name" placeholder="请输入名称"></el-input>
+                <el-form-item label="exporter" prop="code">
+                    <el-input v-model="dialogForm.exporter"></el-input>
                 </el-form-item>
-                <el-form-item label="资源编码" prop="code">
-                    <el-input v-model="dialogForm.code" placeholder="eg：computer、mysql、kafka"></el-input>
-                </el-form-item>
-                <el-form-item label="exporter" prop="exporter">
-                    <el-select v-model="dialogForm.exporter" placeholder="请选择" style="width: 100%;">
-                        <el-option
-                                v-for="item in exporterList"
-                                :key="item.exporter"
-                                :label="item.exporter"
-                                :value="item.exporter">
-                        </el-option>
-                    </el-select>
+                <el-form-item label="git地址" prop="gitUrl">
+                    <el-input v-model="dialogForm.gitUrl"></el-input>
                 </el-form-item>
                 <el-form-item label="备注">
                     <el-input v-model="dialogForm.remark"></el-input>
@@ -110,11 +86,9 @@
 </template>
 
 <script>
-    import {getResourcePage, addResource, editResource, deleteResource} from "../../api/monitor/resource";
-    import {getExporterList} from "../../api/monitor/exporter";
-
+    import {getExporterPage, addExporter, editExporter, deleteExporter} from "../../api/monitor/exporter";
     export default {
-        name: 'Resource',
+        name: 'Exporter',
         data() {
             return {
                 queryForm: {
@@ -124,17 +98,9 @@
                 },
                 tableData: {},
                 dialogForm: {},
-                exporterList: [],
-                exporterQueryList: [],
                 dialogFormRules: {
-                    code: [
-                        {required: true, message: '请输入编码', trigger: 'blur'},
-                    ],
-                    name: [
-                        {required: true, message: '请输入名称', trigger: 'blur'},
-                    ],
                     exporter: [
-                        {required: true, message: '请输入exporter名称', trigger: 'blur'},
+                        {required: true, message: '请输入exporter', trigger: 'blur'},
                     ],
                     gitUrl: [
                         {required: true, message: '请输入git地址', trigger: 'blur'},
@@ -146,20 +112,10 @@
         },
         created() {
             this.page()
-            this.exporterList = []
-            this.exporterQueryList = [{exporter: "全部"}]
-            getExporterList().then(data => {
-                this.exporterList.push(...data)
-                this.exporterQueryList.push(...data)
-            });
         },
         methods: {
             async page() {
-                let queryParams = {...this.queryForm}
-                if(this.queryForm.exporter === "全部"){
-                    queryParams["exporter"] = ""
-                }
-                getResourcePage(queryParams).then(data => {
+                getExporterPage(this.queryForm).then(data => {
                     this.tableData = data
                 });
             },
@@ -174,16 +130,13 @@
             dialogFormReset() {
                 this.dialogForm = {
                     id: 0,
-                    code: "",
-                    name: "",
                     exporter: "",
                     gitUrl: "",
-                    template: "",
                     remark: "",
                 }
             },
             handleAdd() {
-                this.dialogTitle = "监控资源 - 添加"
+                this.dialogTitle = "Exporter - 添加"
                 this.dialogFormReset()
                 this.dialogVisible = true
             },
@@ -191,7 +144,7 @@
                 this.page()
             },
             async handleEdit(index, row) {
-                this.dialogTitle = "监控资源 - 编辑"
+                this.dialogTitle = "Exporter - 编辑"
                 this.dialogFormReset()
                 this.dialogForm = {...row}
                 this.dialogVisible = true
@@ -201,7 +154,7 @@
             },
             async handleDelete(_, row) {
                 const fn = async () => {
-                    await deleteResource(row.id)
+                    await deleteExporter(row.id)
                     this.successFn(null)
                 }
                 this.$delConfirm(fn)
@@ -215,11 +168,11 @@
                 this.$refs["dialogForm"].validate((valid) => {
                     if (valid) {
                         if (this.dialogForm.id === 0) {
-                            addResource(this.dialogForm).then(data => {
+                            addExporter(this.dialogForm).then(data => {
                                 this.successFn(data)
                             });
                         } else {
-                            editResource(this.dialogForm.id, this.dialogForm).then(data => {
+                            editExporter(this.dialogForm.id, this.dialogForm).then(data => {
                                 this.successFn(data)
                             });
                         }

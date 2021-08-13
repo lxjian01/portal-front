@@ -2,12 +2,22 @@
     <div class="container">
         <el-form :inline="true" :model="queryForm" class="demo-form-inline" size="medium">
             <el-form-item label="exporter">
-                <el-select v-model="queryForm.exporter" placeholder="请选择">
+                <el-select v-model="queryForm.exporter" placeholder="请选择" @change="exporterQueryChange">
                     <el-option
                             v-for="item in exporterQueryList"
                             :key="item.exporter"
                             :label="item.exporter"
                             :value="item.exporter">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="告警指标">
+                <el-select v-model="queryForm.alertingMetricId" placeholder="请选择">
+                    <el-option
+                            v-for="item in alertingMetricQueryList"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id">
                     </el-option>
                 </el-select>
             </el-form-item>
@@ -24,32 +34,32 @@
                 border
                 style="width: 100%">
             <el-table-column
+                    width="130"
                     prop="exporter"
                     label="exporter">
             </el-table-column>
             <el-table-column
                     prop="name"
-                    label="指标名称">
+                    label="指标">
+                <template #default="scope">
+                    <span>编码: {{ scope.row.code }}</span>
+                    <br>
+                    <span>名称: {{ scope.row.name }}</span>
+                </template>
             </el-table-column>
             <el-table-column
-                    prop="code"
-                    label="指标编码">
-            </el-table-column>
-            <el-table-column
-                    prop="metric"
-                    label="告警指标">
+                    label="表达式">
+                <template #default="scope">
+                    <span>{{ scope.row.metric }} {{ scope.row.operator }} {{ scope.row.thresholdValue }}</span>
+                </template>
             </el-table-column>
             <el-table-column
                     prop="summary"
-                    label="告警标题">
+                    label="告警概要">
             </el-table-column>
             <el-table-column
                     prop="description"
                     label="告警描述">
-            </el-table-column>
-            <el-table-column
-                    prop="remark"
-                    label="备注">
             </el-table-column>
             <el-table-column
                     width="80"
@@ -131,15 +141,18 @@
 </template>
 
 <script>
-    import {getAlertingMetricPage, addAlertingMetric, editAlertingMetric, deleteAlertingMetric} from "../../api/alarm/alerting-metric";
+    import {getAlertingMetricList} from "../../api/alarm/alerting-metric";
+    import {getAlertingRulePage, addAlertingRule, editAlertingRule, deleteAlertingRule} from "../../api/alarm/alerting-rule";
+
     import {getExporterList} from "../../api/monitor/exporter";
 
     export default {
-        name: 'AlertingMetric',
+        name: 'AlertingRule',
         data() {
             return {
                 queryForm: {
-                    exporter: "",
+                    exporter: "全部",
+                    alertingMetricId: 0,
                     keywords: "",
                     pageIndex: 1,
                     pageSize: 10
@@ -148,6 +161,8 @@
                 dialogForm: {},
                 exporterList: [],
                 exporterQueryList: [],
+                alertingMetricList: [],
+                alertingMetricQueryList: [],
                 dialogFormRules: {
                     code: [
                         {required: true, message: '请输入编码', trigger: 'blur'},
@@ -180,6 +195,7 @@
                 this.exporterList.push(...data)
                 this.exporterQueryList.push(...data)
             });
+            this.alertingMetricQueryList = [{id: 0, name: "全部"}]
         },
         methods: {
             async page() {
@@ -187,8 +203,18 @@
                 if(this.queryForm.exporter === "全部"){
                     queryParams["exporter"] = ""
                 }
-                getAlertingMetricPage(queryParams).then(data => {
+                getAlertingRulePage(queryParams).then(data => {
                     this.tableData = data
+                });
+            },
+            exporterQueryChange(val){
+                this.queryForm.alertingMetricId = 0
+                this.alertingMetricList = []
+                this.alertingMetricQueryList = [{id: 0, name: "全部"}]
+                let params = {exporter: val}
+                getAlertingMetricList(params).then(data => {
+                    this.alertingMetricList.push(...data)
+                    this.alertingMetricQueryList.push(...data)
                 });
             },
             handleSizeChange(val) {
@@ -230,7 +256,7 @@
             },
             async handleDelete(_, row) {
                 const fn = async () => {
-                    await deleteAlertingMetric(row.id)
+                    await deleteAlertingRule(row.id)
                     this.successFn(null)
                 }
                 this.$delConfirm(fn)
@@ -244,11 +270,11 @@
                 this.$refs["dialogForm"].validate((valid) => {
                     if (valid) {
                         if (this.dialogForm.id === 0) {
-                            addAlertingMetric(this.dialogForm).then(data => {
+                            addAlertingRule(this.dialogForm).then(data => {
                                 this.successFn(data)
                             });
                         } else {
-                            editAlertingMetric(this.dialogForm.id, this.dialogForm).then(data => {
+                            editAlertingRule(this.dialogForm.id, this.dialogForm).then(data => {
                                 this.successFn(data)
                             });
                         }

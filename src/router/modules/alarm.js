@@ -29,8 +29,16 @@ export default [
         name: "/alarm/alerting-metric",
         meta: {
             parentTitle: '告警配置',
-            title: '告警指标'
+            title: 'Alerting Metric'
         },
         component: () => import ("../../views/alarm/AlertingMetric.vue")
+    }, {
+        path: "/alarm/alerting-rule",
+        name: "/alarm/alerting-rule",
+        meta: {
+            parentTitle: '告警配置',
+            title: 'Alerting Rule'
+        },
+        component: () => import ("../../views/alarm/AlertingRule.vue")
     },
 ];

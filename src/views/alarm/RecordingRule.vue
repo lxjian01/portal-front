@@ -1,6 +1,16 @@
 <template>
     <div class="container">
         <el-form :inline="true" :model="queryForm" class="demo-form-inline" size="medium">
+            <el-form-item label="prometheus">
+                <el-select v-model="queryForm.prometheusId" placeholder="请选择">
+                    <el-option
+                            v-for="item in prometheusQueryList"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id">
+                    </el-option>
+                </el-select>
+            </el-form-item>
             <el-form-item label="关键字">
                 <el-input v-model="queryForm.keywords" style="width: 300px;" placeholder="请输入名称、record、expr"></el-input>
             </el-form-item>
@@ -113,6 +123,7 @@
         data() {
             return {
                 queryForm: {
+                    prometheusId: 0,
                     keywords: "",
                     pageIndex: 1,
                     pageSize: 10
@@ -121,6 +132,7 @@
                 tableData: {},
                 dialogForm: {},
                 prometheusList: [],
+                prometheusQueryList: [],
                 dialogFormRules: {
                     name: [
                         {required: true, message: '请输入名称', trigger: 'blur'},
@@ -139,8 +151,10 @@
         created() {
             this.page()
             this.prometheusList = []
+            this.prometheusQueryList = [{id: 0, name: "全部"}]
             getPrometheusList().then(data => {
                 this.prometheusList.push(...data)
+                this.prometheusQueryList.push(...data)
             });
         },
         methods: {

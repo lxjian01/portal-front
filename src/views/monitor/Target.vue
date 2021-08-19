@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <el-form :inline="true" :model="queryForm" class="demo-form-inline" size="medium">
-            <el-form-item label="prometheus" prop="prometheusId">
+            <el-form-item label="prometheus">
                 <el-select v-model="queryForm.prometheusId" placeholder="请选择">
                     <el-option
                             v-for="item in prometheusQueryList"
@@ -11,7 +11,7 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="资源" prop="monitorResourceId">
+            <el-form-item label="资源">
                 <el-select v-model="queryForm.monitorResourceId" placeholder="请选择">
                     <el-option
                             v-for="item in monitorResourceQueryList"

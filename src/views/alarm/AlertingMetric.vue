@@ -12,7 +12,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="指标">
-                <el-input v-model="queryForm.keywords" style="width: 300px;" placeholder="请输入指标编码、名称"></el-input>
+                <el-input v-model="queryForm.keywords" style="width: 300px;" placeholder="请输入指标编码、告警标题"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">查询</el-button>
@@ -26,10 +26,6 @@
             <el-table-column
                     prop="exporter"
                     label="exporter">
-            </el-table-column>
-            <el-table-column
-                    prop="name"
-                    label="指标名称">
             </el-table-column>
             <el-table-column
                     prop="code"
@@ -91,9 +87,6 @@
                 @open="openDialog"
                 width="60%">
             <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-width="130px" size="medium">
-                <el-form-item label="指标名称" prop="name">
-                    <el-input v-model="dialogForm.name" placeholder="请输入名称"></el-input>
-                </el-form-item>
                 <el-form-item label="指标编码" prop="code">
                     <el-input v-model="dialogForm.code" placeholder="eg: HostOutOfMemory、HostMemoryUnderMemoryPressure、HostUnusualDiskReadRate"></el-input>
                 </el-form-item>
@@ -152,9 +145,6 @@
                     code: [
                         {required: true, message: '请输入编码', trigger: 'blur'},
                     ],
-                    name: [
-                        {required: true, message: '请输入名称', trigger: 'blur'},
-                    ],
                     exporter: [
                         {required: true, message: '请输入exporter名称', trigger: 'blur'},
                     ],
@@ -203,7 +193,6 @@
                 this.dialogForm = {
                     id: 0,
                     code: "",
-                    name: "",
                     exporter: "",
                     metric: "",
                     summary: "",

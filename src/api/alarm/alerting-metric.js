@@ -12,6 +12,10 @@ export function deleteAlertingMetric(id, params){
     return DELETE(`/api/portal/alarm/alerting/metric/${id}`, params)
 }
 
+export function getAlertingMetricDetail(id, params){
+    return GET(`api/portal/alarm/alerting/metric/${id}`, params)
+}
+
 export function getAlertingMetricList(params){
     return GET(`api/portal/alarm/alerting/metric/list`, params)
 }

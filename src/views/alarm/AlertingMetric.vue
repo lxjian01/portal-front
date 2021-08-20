@@ -87,9 +87,6 @@
                 @open="openDialog"
                 width="60%">
             <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-width="130px" size="medium">
-                <el-form-item label="指标编码" prop="code">
-                    <el-input v-model="dialogForm.code" placeholder="eg: HostOutOfMemory、HostMemoryUnderMemoryPressure、HostUnusualDiskReadRate"></el-input>
-                </el-form-item>
                 <el-form-item label="exporter" prop="exporter">
                     <el-select v-model="dialogForm.exporter" placeholder="请选择" style="width: 100%;">
                         <el-option
@@ -99,6 +96,9 @@
                                 :value="item.exporter">
                         </el-option>
                     </el-select>
+                </el-form-item>
+                <el-form-item label="指标编码" prop="code">
+                    <el-input v-model="dialogForm.code" placeholder="eg: HostOutOfMemory、HostMemoryUnderMemoryPressure、HostUnusualDiskReadRate"></el-input>
                 </el-form-item>
                 <el-form-item label="告警指标" prop="metric">
                     <el-input v-model="dialogForm.metric" placeholder="eg: node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100"></el-input>
@@ -142,11 +142,11 @@
                 exporterList: [],
                 exporterQueryList: [],
                 dialogFormRules: {
+                    exporter: [
+                        {required: true, message: '请选择exporter', trigger: 'blur'},
+                    ],
                     code: [
                         {required: true, message: '请输入编码', trigger: 'blur'},
-                    ],
-                    exporter: [
-                        {required: true, message: '请输入exporter名称', trigger: 'blur'},
                     ],
                     metric: [
                         {required: true, message: '请输入告警指标', trigger: 'blur'},

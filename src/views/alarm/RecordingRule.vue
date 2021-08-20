@@ -24,6 +24,15 @@
                 border
                 style="width: 100%">
             <el-table-column
+                    label="Prometheus">
+                <template #default="scope">
+                    <div v-for="(item,index) in scope.row.prometheusList" :key="index">
+                        <span>{{ item.prometheusName }}</span>
+                        <br>
+                    </div>
+                </template>
+            </el-table-column>
+            <el-table-column
                     prop="name"
                     label="名称">
             </el-table-column>
@@ -34,15 +43,6 @@
             <el-table-column
                     prop="expr"
                     label="表达式（expr）">
-            </el-table-column>
-            <el-table-column
-                    label="Prometheus">
-                <template #default="scope">
-                    <div v-for="(item,index) in scope.row.prometheusList" :key="index">
-                        <span>{{ item.prometheusName }}</span>
-                        <br>
-                    </div>
-                </template>
             </el-table-column>
             <el-table-column
                     width="80"
@@ -84,7 +84,7 @@
                 @open="openDialog"
                 width="60%">
             <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-width="130px" size="medium">
-                <el-form-item label="告警组" prop="prometheusIds">
+                <el-form-item label="prometheus" prop="prometheusIds">
                     <el-select v-model="dialogForm.prometheusIds" multiple placeholder="请选择" style="width: 100%;">
                         <el-option
                                 v-for="item in prometheusList"
@@ -134,6 +134,9 @@
                 prometheusList: [],
                 prometheusQueryList: [],
                 dialogFormRules: {
+                    prometheusId: [
+                        {required: true, message: '请选择prometheus', trigger: 'blur'},
+                    ],
                     name: [
                         {required: true, message: '请输入名称', trigger: 'blur'},
                     ],

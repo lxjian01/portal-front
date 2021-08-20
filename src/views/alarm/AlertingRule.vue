@@ -1,6 +1,16 @@
 <template>
     <div class="container">
         <el-form :inline="true" :model="queryForm" class="demo-form-inline" size="medium">
+            <el-form-item label="prometheus">
+                <el-select v-model="queryForm.prometheusId" placeholder="请选择">
+                    <el-option
+                            v-for="item in prometheusQueryList"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id">
+                    </el-option>
+                </el-select>
+            </el-form-item>
             <el-form-item label="exporter">
                 <el-select v-model="queryForm.exporter" placeholder="请选择" @change="exporterQueryChange">
                     <el-option
@@ -16,7 +26,7 @@
                     <el-option
                             v-for="item in alertingMetricQueryList"
                             :key="item.id"
-                            :label="item.name"
+                            :label="item.summary"
                             :value="item.id">
                     </el-option>
                 </el-select>
@@ -34,32 +44,51 @@
                 border
                 style="width: 100%">
             <el-table-column
-                    width="130"
+                    min-width="130"
+                    label="Prometheus">
+                <template #default="scope">
+                    <div v-for="(item,index) in scope.row.prometheusList" :key="index">
+                        <span>{{ item.prometheusName }}</span>
+                        <br>
+                    </div>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    min-width="130"
                     prop="exporter"
                     label="exporter">
             </el-table-column>
             <el-table-column
-                    prop="name"
+                    min-width="130"
                     label="指标">
                 <template #default="scope">
                     <span>编码: {{ scope.row.code }}</span>
                     <br>
-                    <span>名称: {{ scope.row.name }}</span>
+                    <span>标题: {{ scope.row.summary }}</span>
                 </template>
             </el-table-column>
             <el-table-column
+                    min-width="200"
                     label="表达式">
                 <template #default="scope">
                     <span>{{ scope.row.metric }} {{ scope.row.operator }} {{ scope.row.thresholdValue }}</span>
                 </template>
             </el-table-column>
             <el-table-column
-                    prop="summary"
-                    label="告警概要">
-            </el-table-column>
-            <el-table-column
+                    min-width="200"
                     prop="description"
                     label="告警描述">
+            </el-table-column>
+            <el-table-column
+                    prop="severity"
+                    label="告警级别">
+                <template #default="scope">
+                    <span v-if="scope.row.severity === 'critical'">紧急</span>
+                    <span v-else-if="scope.row.severity === 'major'">主要</span>
+                    <span v-else-if="scope.row.severity === 'minor'">次要</span>
+                    <span v-else-if="scope.row.severity === 'warning'">警告</span>
+                    <span v-else>unknown</span>
+                </template>
             </el-table-column>
             <el-table-column
                     width="80"
@@ -101,14 +130,18 @@
                 @open="openDialog"
                 width="60%">
             <el-form ref="dialogForm" :model="dialogForm" :rules="dialogFormRules" label-width="130px" size="medium">
-                <el-form-item label="指标名称" prop="name">
-                    <el-input v-model="dialogForm.name" placeholder="请输入名称"></el-input>
-                </el-form-item>
-                <el-form-item label="指标编码" prop="code">
-                    <el-input v-model="dialogForm.code" placeholder="eg: HostOutOfMemory、HostMemoryUnderMemoryPressure、HostUnusualDiskReadRate"></el-input>
+                <el-form-item label="prometheus" prop="prometheusIds">
+                    <el-select v-model="dialogForm.prometheusIds" multiple placeholder="请选择" style="width: 100%;">
+                        <el-option
+                                v-for="item in prometheusList"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="exporter" prop="exporter">
-                    <el-select v-model="dialogForm.exporter" placeholder="请选择" style="width: 100%;">
+                    <el-select v-model="dialogForm.exporter" placeholder="请选择" style="width: 100%;" @change="exporterChange">
                         <el-option
                                 v-for="item in exporterList"
                                 :key="item.exporter"
@@ -117,17 +150,56 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="告警指标" prop="metric">
-                    <el-input v-model="dialogForm.metric" placeholder="eg: node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100"></el-input>
+                <el-form-item label="alertingMetricId" prop="alertingMetricId">
+                    <el-select v-model="dialogForm.alertingMetricId" placeholder="请选择" style="width: 100%;" @change="alertingMetricChange">
+                        <el-option
+                                v-for="item in alertingMetricList"
+                                :key="item.id"
+                                :label="item.summary"
+                                :value="item.id">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
-                <el-form-item label="告警标题" prop="summary">
-                    <el-input v-model="dialogForm.summary" placeholder="eg: Host out of memory (instance {{ $labels.instance }})"></el-input>
+                <el-form-item label="指标编码">
+                    <el-input v-model="dialogForm.code" :disabled="true"></el-input>
                 </el-form-item>
-                <el-form-item label="告警描述" prop="description">
-                    <el-input v-model="dialogForm.description" placeholder="eg: Node memory is filling up (< 10% left)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"></el-input>
+                <el-form-item label="告警指标">
+                    <el-input v-model="dialogForm.metric" :disabled="true" style="width: 70%;"></el-input>
+                    <el-select v-model="dialogForm.operator" placeholder="请选择计算符" style="width: 15%;">
+                        <el-option
+                                v-for="item in operatorList"
+                                :key="item"
+                                :label="item"
+                                :value="item">
+                        </el-option>
+                    </el-select>
+                    <el-input-number v-model="dialogForm.thresholdValue" style="width: 15%;"></el-input-number>
                 </el-form-item>
-                <el-form-item label="备注">
-                    <el-input v-model="dialogForm.remark"></el-input>
+                <el-form-item label="告警标题">
+                    <el-input v-model="dialogForm.summary" :disabled="true"></el-input>
+                </el-form-item>
+                <el-form-item label="告警描述">
+                    <el-input v-model="dialogForm.description" :disabled="true"></el-input>
+                </el-form-item>
+                <el-form-item label="告警级别">
+                    <el-select v-model="dialogForm.severity" placeholder="请选择告警级别" style="width: 100%;">
+                        <el-option
+                                v-for="item in severityList"
+                                :key="item.key"
+                                :label="item.value"
+                                :value="item.key">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="Alerting For">
+                    <el-select v-model="dialogForm.alertingFor" placeholder="请选择" style="width: 100%;">
+                        <el-option
+                                v-for="item in alertingForList"
+                                :key="item"
+                                :label="item"
+                                :value="item">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
             </el-form>
             <template #footer>
@@ -141,16 +213,18 @@
 </template>
 
 <script>
-    import {getAlertingMetricList} from "../../api/alarm/alerting-metric";
+    import {getAlertingMetricList, getAlertingMetricDetail} from "../../api/alarm/alerting-metric";
     import {getAlertingRulePage, addAlertingRule, editAlertingRule, deleteAlertingRule} from "../../api/alarm/alerting-rule";
 
     import {getExporterList} from "../../api/monitor/exporter";
+    import {getPrometheusList} from "../../api/monitor/prometheus";
 
     export default {
         name: 'AlertingRule',
         data() {
             return {
                 queryForm: {
+                    prometheusId: 0,
                     exporter: "全部",
                     alertingMetricId: 0,
                     keywords: "",
@@ -159,19 +233,32 @@
                 },
                 tableData: {},
                 dialogForm: {},
+                prometheusList: [],
+                prometheusQueryList: [],
                 exporterList: [],
                 exporterQueryList: [],
                 alertingMetricList: [],
                 alertingMetricQueryList: [],
+                operatorList: ["=",">",">=","<","<=","!="],
+                alertingForList: ["1m","2m","3m","4m","5m","6m","7m","8m","9m","10m"],
+                severityList: [
+                    {key: "critical", value: "紧急"},
+                    {key: "major", value: "主要"},
+                    {key: "minor", value: "次要"},
+                    {key: "warning", value: "警告"},
+                ],
                 dialogFormRules: {
-                    code: [
-                        {required: true, message: '请输入编码', trigger: 'blur'},
-                    ],
-                    name: [
-                        {required: true, message: '请输入名称', trigger: 'blur'},
+                    prometheusId: [
+                        {required: true, message: '请选择prometheus', trigger: 'blur'},
                     ],
                     exporter: [
-                        {required: true, message: '请输入exporter名称', trigger: 'blur'},
+                        {required: true, message: '请选择exporter', trigger: 'blur'},
+                    ],
+                    alertingMetricId: [
+                        {required: true, message: '请选择指标', trigger: 'blur'},
+                    ],
+                    code: [
+                        {required: true, message: '请输入编码', trigger: 'blur'},
                     ],
                     metric: [
                         {required: true, message: '请输入告警指标', trigger: 'blur'},
@@ -182,6 +269,18 @@
                     description: [
                         {required: true, message: '请输入告警描述', trigger: 'blur'},
                     ],
+                    operator: [
+                        {required: true, message: '请选择计算符', trigger: 'blur'},
+                    ],
+                    thresholdValue: [
+                        {required: true, message: '请输入告警阈值', trigger: 'blur'},
+                    ],
+                    severity: [
+                        {required: true, message: '请选择告警级别', trigger: 'blur'},
+                    ],
+                    alertingFor: [
+                        {required: true, message: '请选择alerting for', trigger: 'blur'},
+                    ]
                 },
                 dialogTitle: "",
                 dialogVisible: false,
@@ -189,13 +288,20 @@
         },
         created() {
             this.page()
+            this.prometheusList = []
+            this.prometheusQueryList = [{id: 0, name: "全部"}]
+            getPrometheusList().then(data => {
+                this.prometheusList.push(...data)
+                this.prometheusQueryList.push(...data)
+            });
             this.exporterList = []
             this.exporterQueryList = [{exporter: "全部"}]
             getExporterList().then(data => {
                 this.exporterList.push(...data)
                 this.exporterQueryList.push(...data)
             });
-            this.alertingMetricQueryList = [{id: 0, name: "全部"}]
+            this.alertingMetricList = []
+            this.alertingMetricQueryList = [{id: 0, summary: "全部"}]
         },
         methods: {
             async page() {
@@ -209,12 +315,27 @@
             },
             exporterQueryChange(val){
                 this.queryForm.alertingMetricId = 0
+                this.alertingMetricQueryList = [{id: 0, summary: "全部"}]
+                let params = {exporter: val}
+                getAlertingMetricList(params).then(data => {
+                    this.alertingMetricQueryList.push(...data)
+                });
+            },
+            exporterChange(val){
+                this.dialogForm.alertingMetricId = null
                 this.alertingMetricList = []
-                this.alertingMetricQueryList = [{id: 0, name: "全部"}]
                 let params = {exporter: val}
                 getAlertingMetricList(params).then(data => {
                     this.alertingMetricList.push(...data)
-                    this.alertingMetricQueryList.push(...data)
+                });
+            },
+            alertingMetricChange(val){
+                let params = {exporter: val}
+                getAlertingMetricDetail(val,null).then(data => {
+                    this.dialogForm.code = data["code"]
+                    this.dialogForm.metric = data["metric"]
+                    this.dialogForm.summary = data["summary"]
+                    this.dialogForm.description = data["description"]
                 });
             },
             handleSizeChange(val) {
@@ -227,14 +348,18 @@
             },
             dialogFormReset() {
                 this.dialogForm = {
+                    prometheusIds: [],
+                    exporter: "",
+                    alertingMetricId: null,
                     id: 0,
                     code: "",
-                    name: "",
-                    exporter: "",
                     metric: "",
                     summary: "",
                     description: "",
-                    remark: "",
+                    operator: null,
+                    thresholdValue: "",
+                    severity: null,
+                    alertingFor: null,
                 }
             },
             handleAdd() {

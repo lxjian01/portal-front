@@ -12,10 +12,6 @@ export function deleteAlertingRule(id, params){
     return DELETE(`/api/portal/alarm/alerting/rule/${id}`, params)
 }
 
-export function getAlertingRuleList(params){
-    return GET(`api/portal/alarm/alerting/rule/list`, params)
-}
-
 export function getAlertingRulePage(params){
     return GET(`api/portal/alarm/alerting/rule/page`, params)
 }

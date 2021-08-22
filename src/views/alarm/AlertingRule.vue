@@ -75,6 +75,11 @@
                 </template>
             </el-table-column>
             <el-table-column
+                    min-width="100"
+                    prop="alertingFor"
+                    label="Alerting for">
+            </el-table-column>
+            <el-table-column
                     min-width="200"
                     prop="description"
                     label="告警描述">
@@ -150,7 +155,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="alertingMetricId" prop="alertingMetricId">
+                <el-form-item label="告警指标" prop="alertingMetricId">
                     <el-select v-model="dialogForm.alertingMetricId" placeholder="请选择" style="width: 100%;" @change="alertingMetricChange">
                         <el-option
                                 v-for="item in alertingMetricList"
@@ -373,7 +378,13 @@
             async handleEdit(index, row) {
                 this.dialogTitle = "告警指标 - 编辑"
                 this.dialogFormReset()
+                this.exporterChange(row.exporter)
                 this.dialogForm = {...row}
+                console.info(row)
+                this.dialogForm.prometheusIds = []
+                row.prometheusList.forEach((item, index) => {
+                    this.dialogForm.prometheusIds.push(item.prometheusId)
+                })
                 this.dialogVisible = true
             },
             openDialog() {

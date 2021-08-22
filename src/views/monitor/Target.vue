@@ -283,7 +283,6 @@
                 this.dialogTitle = "监控目标 - 编辑"
                 this.dialogFormReset()
                 this.dialogForm = {...row}
-
                 this.dialogForm.alarmGroupIds = []
                 row.alarmGroupList.forEach((item, index) => {
                     this.dialogForm.alarmGroupIds.push(item.alarmGroupId)

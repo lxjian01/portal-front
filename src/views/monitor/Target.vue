@@ -73,7 +73,7 @@
             </el-table-column>
             <el-table-column
                     width="60"
-                    prop="interval"
+                    prop="scrapeInterval"
                     label="频率">
             </el-table-column>
             <el-table-column
@@ -157,10 +157,10 @@
                 <el-form-item label="URL" prop="url">
                     <el-input v-model="dialogForm.url"></el-input>
                 </el-form-item>
-                <el-form-item label="频率" prop="interval">
-                    <el-select v-model="dialogForm.interval" placeholder="请选择">
+                <el-form-item label="频率" prop="scrapeInterval">
+                    <el-select v-model="dialogForm.scrapeInterval" placeholder="请选择">
                         <el-option
-                                v-for="item in intervalList"
+                                v-for="item in scrapeIntervalList"
                                 :key="item"
                                 :label="item"
                                 :value="item">
@@ -200,7 +200,7 @@
                 },
                 tableData: {},
                 dialogForm: {},
-                intervalList: ["5s", "30s", "1m", "2m", "3m", "4m", "5m"],
+                scrapeIntervalList: ["1m", "2m", "3m", "4m", "5m"],
                 prometheusList: [],
                 prometheusQueryList: [],
                 monitorResourceList: [],
@@ -219,7 +219,7 @@
                     url: [
                         {required: true, message: '请输入url', trigger: 'blur'},
                     ],
-                    interval: [
+                    scrapeInterval: [
                         {required: true, message: '请选择频率', trigger: 'blur'},
                     ],
                 },
@@ -268,7 +268,7 @@
                     monitorResourceId: null,
                     name: "",
                     url: "",
-                    interval: "",
+                    scrapeInterval: "",
                 }
             },
             handleAdd() {

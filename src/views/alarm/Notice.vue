@@ -11,16 +11,6 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="资源">
-                <el-select v-model="queryForm.monitorResourceCode" placeholder="请选择" style="width: 130px;">
-                    <el-option
-                            v-for="item in monitorResourceQueryList"
-                            :key="item.code"
-                            :label="item.name"
-                            :value="item.code">
-                    </el-option>
-                </el-select>
-            </el-form-item>
             <el-form-item label="告警级别">
                 <el-select v-model="queryForm.severity" placeholder="请选择" style="width: 130px;">
                     <el-option
@@ -53,6 +43,7 @@
                 border
                 style="width: 100%">
             <el-table-column
+                    width="130"
                     label="prometheus">
                 <template #default="scope">
                     <span>名称：{{ scope.row.prometheusName }}</span>
@@ -61,25 +52,17 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    label="资源">
-                <template #default="scope">
-                    <span>名称：{{ scope.row.monitorResourceName }}</span>
-                    <br>
-                    <span>编码：{{ scope.row.monitorResourceCode }}</span>
-                    <br>
-                    <span>exporter：{{ scope.row.exporter }}</span>
-                </template>
-            </el-table-column>
-            <el-table-column
+                    width="100"
                     prop="alertName"
                     label="告警名称">
             </el-table-column>
             <el-table-column
+                    width="100"
                     prop="instance"
                     label="目标">
             </el-table-column>
             <el-table-column
-                    prop="severity"
+                    width="90"
                     label="告警级别">
                 <template #default="scope">
                     <span v-if="scope.row.severity === 'critical'">紧急</span>
@@ -90,14 +73,17 @@
                 </template>
             </el-table-column>
             <el-table-column
+                    min-width="130"
                     prop="summary"
                     label="概要">
             </el-table-column>
             <el-table-column
+                    min-width="230"
                     prop="description"
                     label="详情">
             </el-table-column>
             <el-table-column
+                    width="90"
                     prop="status"
                     label="告警状态">
                 <template #default="scope">
@@ -107,14 +93,24 @@
                 </template>
             </el-table-column>
             <el-table-column
+                    width="220"
+                    label="标签">
+                <template #default="scope">
+                    <div v-for = "(value,key) in scope.row.labels" :key="key">{{ key }}： {{ value }}</div>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    width="160"
                     prop="startAt"
                     label="开始时间">
             </el-table-column>
             <el-table-column
+                    width="160"
                     prop="endAt"
                     label="结束时间">
             </el-table-column>
             <el-table-column
+                    width="90"
                     prop="alarmNumber"
                     label="告警次数">
             </el-table-column>
@@ -134,7 +130,6 @@
 <script>
     import {getAlarmNoticePage} from "../../api/alarm/notice";
     import {getPrometheusList} from "../../api/monitor/prometheus";
-    import {getResourceList} from "../../api/monitor/resource";
 
     export default {
         name: 'Notice',
@@ -142,7 +137,6 @@
             return {
                 queryForm: {
                     prometheusCode: "",
-                    monitorResourceCode: "",
                     severity: "",
                     srarus: "",
                     keywords: "",
@@ -164,7 +158,6 @@
                 ],
                 intervalList: ["5s", "30s", "1m", "2m", "3m", "4m", "5m"],
                 prometheusQueryList: [],
-                monitorResourceQueryList: [],
             };
         },
         created() {
@@ -173,15 +166,11 @@
             getPrometheusList().then(data => {
                 this.prometheusQueryList.push(...data)
             });
-            console.info(this.prometheusQueryList)
-            this.monitorResourceQueryList = [{code: "", name: "全部"}]
-            getResourceList().then(data => {
-                this.monitorResourceQueryList.push(...data)
-            });
         },
         methods: {
             async page() {
                 getAlarmNoticePage(this.queryForm).then(data => {
+                    console.info(data)
                     this.tableData = data
                 });
             },

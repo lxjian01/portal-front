@@ -244,7 +244,7 @@
                 exporterQueryList: [],
                 alertingMetricList: [],
                 alertingMetricQueryList: [],
-                operatorList: ["=",">",">=","<","<=","!="],
+                operatorList: ["==",">",">=","<","<=","!="],
                 alertingForList: ["1m","2m","3m","4m","5m","6m","7m","8m","9m","10m"],
                 severityList: [
                     {key: "critical", value: "紧急"},

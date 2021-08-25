@@ -200,7 +200,7 @@
                 },
                 tableData: {},
                 dialogForm: {},
-                scrapeIntervalList: ["1m", "2m", "3m", "4m", "5m"],
+                scrapeIntervalList: ["30s","1m", "2m", "3m", "4m", "5m"],
                 prometheusList: [],
                 prometheusQueryList: [],
                 monitorResourceList: [],
